@@ -1,0 +1,63 @@
+- Distributed Web Scraper
+	- Tech Stack
+		- Cassandra
+		- Redis
+		- FastAPI
+		- SocketIO
+		- (Blockchain)
+	- Komponenten
+		- MinerClient
+			- Lars
+			- Verbindungsaufbau
+			- Server schickt Task
+			- Client arbeitet task ab und schickt ergebnis jeweils an result server
+			- result server validiert ergebnisse und credits gutschreiben
+		- ResultClient
+			- Lars
+			- Verbindungsaufbau
+			- schickt client id
+			- Server schickt Ergebnis je nach Intervall
+			- Server zieht Credit ab
+			  collapsed:: true
+				- (Ein Funktion + je nach Größe z.B.)
+		- MiningServer
+			- Lars
+			- Verschicken der Anfragen
+			- optionales Validieren der Antworten
+				- via ergleich der Metadaten
+				- 2/3 Mehrheit
+			- SocketIO
+		- Result Server
+			- Lars
+			- SocketIO
+		- Scheduling Server
+			- Simon
+			- hat jeweils eine redis queue die mit scaled
+			- erstellt priority queues aus Aufträgen
+			- Cassandra in Redis out
+		- Authentifizierungsservice
+			- Simon
+			- Userdaten -> Cassandra
+				- username
+				- auth
+		- Website
+			- Simons Teil
+			- Anzeigen von Credit Daten
+			- Registrierung von Nutzern
+			- Zur Verfügung stellen Miner/Client
+			- Scraping Auftrag anlegen
+				- Auftrag hat
+					- URI
+					- Anfragedaten
+						- Body
+						- Params
+					- Intervall
+					- (Startzeit)
+					- Wie oft
+				- prüfen gegen Blacklist
+			- Credits kaufen
+	- Grundsätze
+		- Credit wird immer abgezogen. auch wenn Result nicht geliefert werden konnte
+		- Preis Transaktion
+			- höher als Vergütiumg
+			- Differenz wird auf zentrales Company Wallet gepackt
