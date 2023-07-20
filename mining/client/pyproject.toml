@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "blockscrape-mining-client"
+version = "0.1.0"
+description = ""
+authors = ["Lars Jaeger <lars@jgr.one>"]
+readme = "README.md"
+packages = [{include = "mining_client"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+python-socketio = "^5.8.0"
+httpx = "^0.24.1"
+blockscrape-mining-server = {path = "../server"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
