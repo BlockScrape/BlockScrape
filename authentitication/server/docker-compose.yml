@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  auth_service:
+    build: .
+    ports:
+      - "7979:7979"
+    expose:
+      - 7979
+    command:
+      - "--cassandra_uri=host.docker.internal"
+      - "--cassandra_port=9042"
+      - "--cassandra_user=cassandra"
+      - "--cassandra_passwd=cassandra"

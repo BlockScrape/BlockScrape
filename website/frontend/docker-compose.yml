@@ -1,0 +1,9 @@
+version: '3.3'
+services:
+  react_ui:
+    build: ./user-interface
+    ports:
+      - "80:80"
+    expose:
+      - 80
+    container_name: react-ui

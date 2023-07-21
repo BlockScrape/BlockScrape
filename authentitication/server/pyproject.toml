@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "server"
+version = "0.1.0"
+description = ""
+authors = ["Simon <berndts.tin21@student.dhbw-heidenheim.de>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.100.0"
+uvicorn = "^0.23.1"
+cassandra-driver = "^3.28.0"
+python-jose = "^3.3.0"
+passlib = "^1.7.4"
+pyjwt = "^2.8.0"
+werkzeug = "^2.3.6"
+python-multipart = "^0.0.6"
+python-decouple = "^3.8"
+bcrypt = "^4.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

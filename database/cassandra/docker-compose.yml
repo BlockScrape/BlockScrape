@@ -1,0 +1,31 @@
+version: '3.3'
+
+services:
+    cassandra:
+      image: cassandra:latest
+      container_name: cassandra
+      ports:
+        - "9042:9042"
+      restart: always
+      volumes:
+        - ./out/cassandra_data:/var/lib/cassandra
+      healthcheck:
+        test: ["CMD", "cqlsh", "-u cassandra", "-p cassandra" ,"-e describe keyspaces"]
+        interval: 15s
+        timeout: 10s
+        retries: 10
+
+    cassandra-load-keyspace:
+        container_name: load-keyspace
+        image: cassandra:latest
+        depends_on:
+          - cassandra
+        volumes:
+          - ./src/cassandra_schema.cql:/schema.cql
+        command: /bin/bash -c "sleep 60 && echo loading cassandra keyspace && cqlsh cassandra -f /schema.cql"
+        deploy:
+          restart_policy:
+            condition: on-failure
+            delay: 5s
+            max_attempts: 3
+            window: 120s
