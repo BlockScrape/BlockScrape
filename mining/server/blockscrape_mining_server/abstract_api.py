@@ -2,7 +2,7 @@ from json import JSONDecoder
 from typing import List
 import httpx
 
-from mining.server.blockscrape_mining_server import TaskSchema, TaskResultSchema
+from blockscrape_mining_server import TaskSchema, TaskResultSchema
 
 
 async def request_task_bundle(address: str = "localhost", number_of_tasks: int = 10) -> List[TaskSchema]:
@@ -12,5 +12,5 @@ async def request_task_bundle(address: str = "localhost", number_of_tasks: int =
     return tasks
 
 
-async def register_result(List[TaskResultSchema]):
+async def register_result(task_results: List[TaskResultSchema]):
     pass

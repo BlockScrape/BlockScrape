@@ -28,6 +28,7 @@ class TaskSchema(BaseModel):
     headers: dict
     cookies: dict
 
+    validated: bool = False
     pending_users: List[Tuple[str, int]]
     finished_users: List[Tuple[str, int]]
 
