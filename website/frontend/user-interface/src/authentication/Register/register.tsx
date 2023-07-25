@@ -7,11 +7,43 @@ import {
     Text,
     Container,
     Group,
-    Button,
+    Button, Checkbox,
 } from '@mantine/core';
-import {Link} from 'react-router-dom';
+import {DatePickerInput} from '@mantine/dates';
+import {useForm} from "@mantine/form";
+import {useState} from 'react';
+import {doUtcDate} from "../../global/constants/constants";
+
+
 
 export function RegisterForm() {
+    const form = useForm({
+        initialValues: {
+            first_name: '',
+            last_name: '',
+            birthdate: new Date(),
+            username: '',
+            email: '',
+            password: '',
+            termsOfService: false,
+        },
+
+        validate: {
+            email: (data) => (/^\S+@\S+$/.test(data) ? null : 'Invalid email'),
+        },
+    });
+
+    const handleSubmit = (value: ReturnType<(values: { first_name: string, last_name: string, birthdate: Date, username: string, email: string, password: string, termsOfService: boolean }) =>
+        { first_name: string, last_name: string, birthdate: Date, username: string, email: string, password: string, termsOfService: boolean }>) => {
+
+        let tempDate = doUtcDate(value.birthdate)
+        console.log(value.birthdate)
+        console.log(value.birthdate.valueOf())
+        console.log("")
+        console.log(tempDate)
+        console.log(tempDate.valueOf())
+    };
+
     return (
         <Container size={420} my={40}>
             <Title
@@ -22,17 +54,48 @@ export function RegisterForm() {
             </Title>
 
             <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-                <TextInput label="First Name" placeholder="John/Jane" required/>
-                <TextInput label="Last Name" placeholder="Doe" required/>
-                <TextInput label="Username" placeholder="username" required/>
-                <TextInput label="Email" placeholder="john@doe.de" required/>
-                <PasswordInput label="Password" placeholder="Your password" required mt="md"/>
-
-                <Group position="apart" mt="lg">
-                </Group>
-                <Button fullWidth mt="xl">
-                    Register
-                </Button>
+                <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+                    <TextInput
+                        label="First Name"
+                        placeholder="John/Jane"
+                        {...form.getInputProps('first_name')}
+                        required/>
+                    <TextInput
+                        label="Last Name"
+                        placeholder="Doe"
+                        {...form.getInputProps('last_name')}
+                        required/>
+                    <DatePickerInput
+                        label="Your Birthday"
+                        placeholder="Pick your birthday"
+                        {...form.getInputProps('birthdate')}
+                        mx="auto"
+                        maw={400}/>
+                    <TextInput
+                        label="Username"
+                        placeholder="username"
+                        {...form.getInputProps('username')}
+                        required/>
+                    <TextInput
+                        withAsterisk
+                        label="Email"
+                        placeholder="your@email.com"
+                        {...form.getInputProps('email')}
+                        required/>
+                    <PasswordInput
+                        label="Password"
+                        placeholder="Your password"
+                        {...form.getInputProps('password')}
+                        required/>
+                    <Checkbox
+                        mt="md"
+                        label="I agree to sell my soul"
+                        {...form.getInputProps('termsOfService', {type: 'checkbox'})}
+                        required/>
+                    <Group position="right" mt="md">
+                        <Button type="submit">Submit</Button>
+                    </Group>
+                </form>
             </Paper>
         </Container>
     );

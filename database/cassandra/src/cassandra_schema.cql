@@ -18,9 +18,9 @@ CREATE TABLE user_data (
 
 CREATE TABLE order_list (
   uuid uuid PRIMARY KEY,
-  u_username uuid,
+  creator_username text,
   name text,
-  url text,
+  scraping_url text,
   start_timestamp int,
   repetitions int,
   intervall int
@@ -28,8 +28,8 @@ CREATE TABLE order_list (
 
 CREATE TABLE data (
   uuid uuid PRIMARY KEY,
-  a_uuid uuid,
-  u_username text,
+  order_uuid uuid,
+  creator_username text,
   scraping_username text,
   data text
 );

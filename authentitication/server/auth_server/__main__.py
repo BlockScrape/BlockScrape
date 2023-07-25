@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from auth_server.dependencies.db_connector import get_database_session, connect_database
 from auth_server.dependencies.authentification import authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, \
-    create_access_token, get_current_user
+    create_access_token, get_current_user, hash_password
 from auth_server.schemas.authentification import Token
 import auth_server.db_connect.user
 import argparse
@@ -59,10 +59,10 @@ async def create_user(firstname: str = Body(embed=True),
                       birthdate: int = Body(embed=True),
                       session: Session = Depends(get_database_session)):
     return auth_server.db_connect.user.create_user(username=username, first_name=firstname, last_name=lastname,
-                                                   passwd=passwd, email=email, birth_date=birthdate, session=session)
+                                                   passwd=hash_password(passwd), email=email, birth_date=birthdate, session=session)
 
 
-@app.get("/user/get_user_by_token")
+@app.get("/user/get_by_token")
 async def get_user_by_token(auth_user=Depends(get_current_user)):
     if auth_user is None:
         return JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content="token unauthorized")

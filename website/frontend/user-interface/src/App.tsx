@@ -7,6 +7,7 @@ import React from "react";
 import MainPage from "./main/main";
 import OrderPage from "./order/order";
 import CoinPage from "./coin/coin";
+import Impressum from "./footer/impressum";
 
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/registerForm" element={<RegisterForm />} />
           <Route path="/orderPage" element={<OrderPage/>}/>
           <Route path="/coinPage" element={<CoinPage/>}/>
+          <Route path="/impressum" element={<Impressum/>}/>
       </Routes>
     </BrowserRouter>
     );
