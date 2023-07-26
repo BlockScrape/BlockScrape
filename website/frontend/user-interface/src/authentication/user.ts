@@ -11,3 +11,4 @@ export function getCredentialCookie() {
     const cookies = new Cookies()
     return cookies.get("token");
 }
+

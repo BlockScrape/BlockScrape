@@ -8,12 +8,30 @@ import {
     Container,
     Group,
     Button,
+    Footer,
+    Flex,
+    Checkbox
 } from '@mantine/core';
 import {Link} from 'react-router-dom';
 import {RegisterForm} from "./Register/register";
 import {setCredentialCookie} from "./user";
+import {useForm} from '@mantine/form';
+import React, {useState} from 'react';
 
 export function AuthenticationForm() {
+    const [message, setMessage] = useState('');
+    const form = useForm({
+        initialValues: {
+            username: '',
+            password: ''
+        },
+    });
+
+    const handleSubmit = (value: ReturnType<(values: { password: string; username: string }) => { password: string; username: string }>) => {
+        console.log(value.password)
+        console.log(value.username)
+    };
+
     return (
         <Container size={420} my={40}>
             <Title
@@ -30,14 +48,21 @@ export function AuthenticationForm() {
             </Text>
 
             <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-                <TextInput label="Email" placeholder="john@doe.de" required/>
-                <PasswordInput label="Password" placeholder="Your password" required mt="md"/>
-                <Group position="apart" mt="lg">
-                </Group>
-                <Button fullWidth mt="xl" onClick={() => setCredentialCookie("hi", 23)}>
-                    Sign in
-                </Button>
+                <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+                    <TextInput
+                        withAsterisk
+                        label="Username"
+                        placeholder="username"
+                        {...form.getInputProps('username')}
+                        required
+                    />
+                    <PasswordInput label="Password" placeholder="Your password" {...form.getInputProps('password')} required mt="md"/>
+                    <Group position="right" mt="md">
+                        <Button type="submit">Submit</Button>
+                    </Group>
+                </form>
             </Paper>
         </Container>
-    );
+    )
+        ;
 }

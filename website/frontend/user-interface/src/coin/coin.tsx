@@ -8,11 +8,11 @@ import {
     Text,
     MediaQuery,
     Burger,
-    useMantineTheme,
+    useMantineTheme, Anchor, Flex,
 } from '@mantine/core';
 import {MainLinks} from '../global/_mainLinks';
 import {AuthenticationForm} from "../authentication/authentication";
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
 import {getCredentialCookie, setCredentialCookie} from "../authentication/user";
 
 export default function CoinPage() {
@@ -43,7 +43,23 @@ export default function CoinPage() {
             }
             footer={
                 <Footer height={60} p="md">
-                    Typischer Baba Footer
+                    <Flex
+                        mih={50}
+                        gap="md"
+                        justify="center"
+                        align="flex-start"
+                        direction="row"
+                        wrap="wrap"
+                    >
+                        <div>
+                            <Anchor component={Link} to="/impressum">
+                                Impressum
+                            </Anchor>
+                        </div>
+                        <div>
+                            &copy;  2023 BlockScrape
+                        </div>
+                    </Flex>
                 </Footer>
             }
             header={
