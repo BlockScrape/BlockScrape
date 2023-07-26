@@ -59,8 +59,7 @@ async def set_user(sid, user_id):
 @sio.event("task_result")
 async def task_result(sid, data):
     """
-
-    :param sid:
+    :param sid: socket id
     :param data: json encoded list of json encoded TaskResultSchema
     :return:
     """
@@ -71,11 +70,10 @@ async def task_result(sid, data):
                                              )
     # write results to redis
     await red.lpush("task_results", *processed_results)
-
+    await sio.emit("task_bundle", await get_new_task_bundle(10), room=sid)
 
 @sio.event("disconnect")
 async def disconnect(sid):
     print("disconnect ", sid)
     # remove sid from user map, clear pending tasks
     del user_map[sid]
-

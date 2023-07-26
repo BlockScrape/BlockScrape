@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "mining_client"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 python-socketio = "^5.8.0"
 httpx = "^0.24.1"
 blockscrape-mining-server = {path = "../server"}
