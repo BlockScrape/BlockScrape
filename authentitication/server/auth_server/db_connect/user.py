@@ -6,7 +6,7 @@ from datetime import datetime
 
 def create_user(username: str, first_name: str, last_name: str, passwd: str, email: str, birth_date: int,
                 session: Session):
-    date_stamp = datetime.fromtimestamp(birth_date).strftime('%Y-%m-%d')
+    date_stamp = datetime.fromtimestamp(birth_date/1000).strftime('%Y-%m-%d')
 
     if get_user(username, session) is None:
         try:

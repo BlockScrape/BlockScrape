@@ -14,7 +14,7 @@ import {
 } from '@mantine/core';
 import {Link} from 'react-router-dom';
 import {RegisterForm} from "./Register/register";
-import {setCredentialCookie} from "./user";
+import {login, setCredentialCookie} from "./user";
 import {useForm} from '@mantine/form';
 import React, {useState} from 'react';
 
@@ -28,8 +28,8 @@ export function AuthenticationForm() {
     });
 
     const handleSubmit = (value: ReturnType<(values: { password: string; username: string }) => { password: string; username: string }>) => {
-        console.log(value.password)
-        console.log(value.username)
+        login(value.username, value.password)
+
     };
 
     return (

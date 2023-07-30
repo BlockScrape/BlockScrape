@@ -1,12 +1,8 @@
 import React from 'react';
 import {
-    BsClipboard2Check,
     BsCashCoin
 } from 'react-icons/bs';
-import {
-    GiMining
-} from "react-icons/gi";
-import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {AiOutlineShoppingCart} from "react-icons/ai";
 import {ThemeIcon, UnstyledButton, Group, Text} from '@mantine/core';
 

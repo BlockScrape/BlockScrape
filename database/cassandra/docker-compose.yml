@@ -7,8 +7,6 @@ services:
       ports:
         - "9042:9042"
       restart: always
-      volumes:
-        - ./out/cassandra_data:/var/lib/cassandra
       healthcheck:
         test: ["CMD", "cqlsh", "-u cassandra", "-p cassandra" ,"-e describe keyspaces"]
         interval: 15s

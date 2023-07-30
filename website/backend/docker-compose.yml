@@ -7,7 +7,7 @@ services:
     expose:
       - 6543
     command:
-      - "--authentication_uri=http://127.0.0.1:7979"
+      - "--authentication_uri=http://host.docker.internal:7979"
       - "--cassandra_uri=host.docker.internal"
       - "--cassandra_port=9042"
       - "--cassandra_user=cassandra"

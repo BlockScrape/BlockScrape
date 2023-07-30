@@ -1,4 +1,4 @@
-const REQUEST_URL = ':6543',
+const REQUEST_URL = 'http://localhost:6543',
     USER_URL = '/user',
     LOGIN_TOKEN = '/token',
     TOKEN_EXPIRE_HOURS = 10,

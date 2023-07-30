@@ -13,6 +13,7 @@ import {DatePickerInput} from '@mantine/dates';
 import {useForm} from "@mantine/form";
 import {useState} from 'react';
 import {doUtcDate} from "../../global/constants/constants";
+import {register} from "../user";
 
 
 
@@ -36,12 +37,9 @@ export function RegisterForm() {
     const handleSubmit = (value: ReturnType<(values: { first_name: string, last_name: string, birthdate: Date, username: string, email: string, password: string, termsOfService: boolean }) =>
         { first_name: string, last_name: string, birthdate: Date, username: string, email: string, password: string, termsOfService: boolean }>) => {
 
-        let tempDate = doUtcDate(value.birthdate)
-        console.log(value.birthdate)
-        console.log(value.birthdate.valueOf())
-        console.log("")
-        console.log(tempDate)
-        console.log(tempDate.valueOf())
+        if (value.termsOfService) {
+            register(value)
+        }
     };
 
     return (

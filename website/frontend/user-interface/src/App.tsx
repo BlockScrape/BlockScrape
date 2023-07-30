@@ -8,6 +8,7 @@ import MainPage from "./main/main";
 import OrderPage from "./order/order";
 import CoinPage from "./coin/coin";
 import Impressum from "./footer/impressum";
+import NotFound from "./global/404/404";
 
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="/orderPage" element={<OrderPage/>}/>
           <Route path="/coinPage" element={<CoinPage/>}/>
           <Route path="/impressum" element={<Impressum/>}/>
+          <Route path="*" element={<NotFound/>}/>
       </Routes>
     </BrowserRouter>
     );

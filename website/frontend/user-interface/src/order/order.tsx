@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {
     AppShell,
     Navbar,
@@ -8,13 +8,15 @@ import {
     Text,
     MediaQuery,
     Burger,
-    useMantineTheme, Anchor, Flex,
+    useMantineTheme, Anchor, Flex, Center, ThemeIcon, Group,
 } from '@mantine/core';
 import {MainLinks} from '../global/_mainLinks';
 import {AuthenticationForm} from "../authentication/authentication";
-import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {getCredentialCookie, setCredentialCookie} from "../authentication/user";
-import {OrderModal} from "./add/addOrder";
+import {OrderModal} from "./application/add/addOrder";
+import OrderApplication from "./application/application";
+import {AiOutlineShoppingCart} from "react-icons/ai";
 
 export default function OrderPage() {
     const theme = useMantineTheme();
@@ -82,7 +84,28 @@ export default function OrderPage() {
             }
 
         >
+            <Flex
+                    mih={50}
+                    gap="md"
+                    justify="center"
+                    align="flex-start"
+                    direction="row"
+                    wrap="wrap"
+                >
+                <Group>
+                    <h1 color="teal">Your Orders</h1>
+                    {<AiOutlineShoppingCart size="2rem"/>}
+                </Group>
+
+
+            </Flex>
+            <br/>
+            <br/>
+            <OrderApplication/>
+            <br/>
+            <br/>
             <OrderModal/>
         </AppShell>
     );
 }
+

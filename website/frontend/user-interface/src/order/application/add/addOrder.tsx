@@ -53,9 +53,9 @@ export function OrderModal() {
             </Modal>
 
             <Group position="center">
-                <Button onClick={open} variant="outline" color="teal"><ThemeIcon variant="light" color="teal">
-                    {<RiAddBoxFill size="1.2rem"/>}
-                </ThemeIcon></Button>
+                <Button onClick={open} variant="outline" color="green" size={"xs"}>
+                    {<RiAddBoxFill color="green" size="1.2rem"/>}
+                </Button>
             </Group>
         </>
     );

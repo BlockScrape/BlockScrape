@@ -34,7 +34,7 @@ async def create(firstname: str = Body(embed=True),
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content="Internal Server not reachable, try later")
     if request.status_code == 201:
-        return JSONResponse(status_code=status.HTTP_200_OK, content=request.json())
+        return JSONResponse(status_code=status.HTTP_201_CREATED, content=request.json())
     elif request.status_code == 403:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="username already exists")
     else:
