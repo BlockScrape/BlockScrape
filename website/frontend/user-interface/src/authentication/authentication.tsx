@@ -7,14 +7,10 @@ import {
     Text,
     Container,
     Group,
-    Button,
-    Footer,
-    Flex,
-    Checkbox
+    Button
 } from '@mantine/core';
 import {Link} from 'react-router-dom';
-import {RegisterForm} from "./Register/register";
-import {login, setCredentialCookie} from "./user";
+import {login} from "./user";
 import {useForm} from '@mantine/form';
 import React, {useState} from 'react';
 

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {
     AppShell,
     Navbar,
@@ -16,7 +16,7 @@ import {
 import {MainLinks} from '../global/_mainLinks';
 import {AuthenticationForm} from "../authentication/authentication";
 import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
-import {getCredentialCookie, setCredentialCookie} from "../authentication/user";
+import {getCredentialCookie} from "../global/constants/constants";
 
 export default function MainPage() {
     const theme = useMantineTheme();
@@ -57,6 +57,11 @@ export default function MainPage() {
                         <div>
                             <Anchor component={Link} to="/impressum">
                                 Impressum
+                            </Anchor>
+                        </div>
+                        <div>
+                            <Anchor href="https://github.com/BlockScrape">
+                                GitHub
                             </Anchor>
                         </div>
                         <div>

@@ -1,3 +1,5 @@
+import Cookies from "universal-cookie";
+
 const REQUEST_URL = 'http://localhost:6543',
     USER_URL = '/user',
     LOGIN_TOKEN = '/token',
@@ -35,6 +37,18 @@ const HTTP_AUTH_HEADERS = (auth_token: string) => {
     return {
         'Authorization': 'Bearer ' + auth_token
     };
+}
+
+function setCredentialCookie(value: string, expires: number) {
+    const cookies = new Cookies()
+    let date = new Date();
+    date.setTime(date.getTime() + (expires * 60 * 60 * 1000))
+    cookies.set("token", value, {expires: date, path: '/'})
+}
+
+function getCredentialCookie() {
+    const cookies = new Cookies()
+    return cookies.get("token");
 }
 
 function doUtcDate(date: Date) {
@@ -97,5 +111,7 @@ export {
     HTTP_STATUS_OK,
     TOKEN_EXPIRE_HOURS,
     VALIDATE_TOKEN,
-    doUtcDate
+    doUtcDate,
+    setCredentialCookie,
+    getCredentialCookie
 }

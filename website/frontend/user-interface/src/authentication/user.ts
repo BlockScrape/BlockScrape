@@ -7,20 +7,8 @@ import {
     REQUEST_URL,
     TOKEN_EXPIRE_HOURS, USER_CREATE_URL
 } from "../global/constants/constants";
-import {constants} from "http2";
-import {useLocation} from "react-router-dom";
+import {setCredentialCookie, getCredentialCookie} from "../global/constants/constants";
 
-export function setCredentialCookie(value: string, expires: number) {
-    const cookies = new Cookies()
-    let date = new Date();
-    date.setTime(date.getTime() + (expires * 60 * 60 * 1000))
-    cookies.set("token", value, {expires: date, path: '/'})
-}
-
-export function getCredentialCookie() {
-    const cookies = new Cookies()
-    return cookies.get("token");
-}
 
 export function login(username: string, passwd: string) {
     let formdata = new FormData();
@@ -36,7 +24,7 @@ export function login(username: string, passwd: string) {
         })
         .then((data) => {
             if (data) {
-                setCredentialCookie(data.acces_token, TOKEN_EXPIRE_HOURS);
+                setCredentialCookie(data.access_token, TOKEN_EXPIRE_HOURS);
                 window.location.reload();
             }
         })

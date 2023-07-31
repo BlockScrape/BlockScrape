@@ -4,7 +4,6 @@ import {RiDeleteBin2Fill, RiEdit2Fill} from "react-icons/ri";
 import React from "react";
 
 function deleteOrder() {
-    console.log("YOOO")
 }
 
 
@@ -36,7 +35,7 @@ export function OpenOrder(value: { uuid: string, name: string, url: string, star
                     </Button>
                 </Flex>
             </Modal>
-            <tr onClick={open}>
+            <tr onClick={open} key={value.uuid}>
                 <td>{value.name}</td>
                 <td>{value.starting_date.toString()}</td>
                 <td>{value.intervall}</td>

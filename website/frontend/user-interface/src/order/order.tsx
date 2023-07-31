@@ -13,7 +13,7 @@ import {
 import {MainLinks} from '../global/_mainLinks';
 import {AuthenticationForm} from "../authentication/authentication";
 import {Link} from "react-router-dom";
-import {getCredentialCookie, setCredentialCookie} from "../authentication/user";
+import {getCredentialCookie} from "../global/constants/constants";
 import {OrderModal} from "./application/add/addOrder";
 import OrderApplication from "./application/application";
 import {AiOutlineShoppingCart} from "react-icons/ai";
@@ -57,6 +57,11 @@ export default function OrderPage() {
                         <div>
                             <Anchor component={Link} to="/impressum">
                                 Impressum
+                            </Anchor>
+                        </div>
+                        <div>
+                            <Anchor href="https://github.com/BlockScrape">
+                                GitHub
                             </Anchor>
                         </div>
                         <div>

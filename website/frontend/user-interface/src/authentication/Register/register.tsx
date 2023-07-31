@@ -11,11 +11,7 @@ import {
 } from '@mantine/core';
 import {DatePickerInput} from '@mantine/dates';
 import {useForm} from "@mantine/form";
-import {useState} from 'react';
-import {doUtcDate} from "../../global/constants/constants";
 import {register} from "../user";
-
-
 
 export function RegisterForm() {
     const form = useForm({

@@ -11,7 +11,7 @@ def create_order(username: str, name: str, scraping_url, start_timestamp: int, r
             "INSERT INTO order_list (uuid, creator_username, name, scraping_url, start_timestamp, repetitions, intervall)"
             "VALUES (%(id)s, %(creator_user)s, %(scrape_name)s, %(scrape_url)s, %(timestamp)s, %(repetit)s, %(interv)s)",
             {'id': uuid4(), 'creator_user': username, 'scrape_name': name, 'scrape_url': scraping_url,
-             'timestamp': start_timestamp, 'repetit': repetitions, 'interv': intervall})
+             'timestamp': int(start_timestamp/1000), 'repetit': repetitions, 'interv': intervall})
         return JSONResponse(status_code=status.HTTP_201_CREATED, content="Order created")
     except:
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content="Error in Database")
