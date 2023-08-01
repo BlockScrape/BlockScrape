@@ -1,5 +1,6 @@
 import Cookies from "universal-cookie";
 import {
+    doUtcDate,
     HTTP_JSON_HEADERS,
     HTTP_METHOD_POST, HTTP_STATUS_CREATED,
     HTTP_STATUS_OK,
@@ -38,7 +39,7 @@ export function register(value: { first_name: string, last_name: string, birthda
         username: value.username,
         passwd: value.password,
         email: value.email,
-        birthdate: value.birthdate.getTime()
+        birthdate: doUtcDate(value.birthdate).getTime()
     };
     fetch(REQUEST_URL + USER_CREATE_URL, {
         method: HTTP_METHOD_POST,
