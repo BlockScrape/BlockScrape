@@ -3,7 +3,8 @@ services:
   react_ui:
     build: ./user-interface
     ports:
-      - "80:80"
+      - "99:99"
     expose:
-      - 80
+      - 99
     container_name: react-ui
+

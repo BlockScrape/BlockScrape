@@ -17,10 +17,11 @@ services:
         container_name: load-keyspace
         image: cassandra:latest
         depends_on:
-          - cassandra
+          cassandra:
+            condition: service_healthy
         volumes:
           - ./src/cassandra_schema.cql:/schema.cql
-        command: /bin/bash -c "sleep 60 && echo loading cassandra keyspace && cqlsh cassandra -f /schema.cql"
+        command: /bin/bash -c "echo loading cassandra keyspace && cqlsh cassandra -f /schema.cql"
         deploy:
           restart_policy:
             condition: on-failure
