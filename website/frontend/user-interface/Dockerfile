@@ -1,4 +1,4 @@
-FROM node:16.8 as builder
+FROM node:16.8-alpine as builder
 
 COPY package*.json ./
 
@@ -10,7 +10,7 @@ COPY . .
 
 RUN npm run build
 
-FROM nginx:alpine
+FROM nginx:alpine-slim
 
 COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
 

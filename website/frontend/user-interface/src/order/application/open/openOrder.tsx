@@ -2,8 +2,10 @@ import {Modal, Button, Group, TextInput, NumberInput, Checkbox, Center, ThemeIco
 import {useDisclosure} from '@mantine/hooks';
 import {RiDeleteBin2Fill, RiEdit2Fill} from "react-icons/ri";
 import React from "react";
+import {deleteOrder} from "../fetch/orderBackend";
 
-function deleteOrder() {
+function deleteThisOrder(uuid: string) {
+    deleteOrder(uuid)
 }
 
 
@@ -30,7 +32,7 @@ export function OpenOrder(value: { uuid: string, name: string, url: string, star
                     direction="row"
                     wrap="wrap"
                 >
-                    <Button onClick={() => deleteOrder()} variant="outline" color="red">
+                    <Button onClick={() => deleteThisOrder(value.uuid)} variant="outline" color="red">
                         {<RiDeleteBin2Fill size="1.2rem"/>}
                     </Button>
                 </Flex>

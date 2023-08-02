@@ -1,12 +1,12 @@
 import {
     doUtcDate,
     getCredentialCookie,
-    HTTP_AUTH_HEADERS, HTTP_JSON_HEADERS_WITH_AUTH,
+    HTTP_AUTH_HEADERS, HTTP_JSON_HEADERS_WITH_AUTH, HTTP_METHOD_DELETE,
     HTTP_METHOD_GET,
     HTTP_METHOD_POST,
     HTTP_STATUS_CREATED,
     HTTP_STATUS_OK,
-    ORDER_CREATE,
+    ORDER_CREATE, ORDER_DELETE,
     ORDER_INFO,
     REQUEST_URL
 } from "../../../global/constants/constants";
@@ -56,6 +56,29 @@ export function saveOrder(data: { website_name: string; starting_date: Date; int
                 return;
             }
             return response.json()
+        })
+        .then((data) => {
+            if (data) {
+                window.location.reload();
+            }
+        })
+}
+
+export function deleteOrder(dataUuid: string) {
+    const data = {
+        uuid: dataUuid
+    }
+    fetch(REQUEST_URL + ORDER_DELETE, {
+        method: HTTP_METHOD_DELETE,
+        headers: HTTP_JSON_HEADERS_WITH_AUTH(getCredentialCookie()),
+        body: JSON.stringify(data)
+    })
+        .then(response => {
+            if (response.status != HTTP_STATUS_OK) {
+                alert("Nope")
+                return;
+            }
+            return response.json();
         })
         .then((data) => {
             if (data) {
