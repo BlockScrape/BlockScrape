@@ -1,22 +1,17 @@
 [tool.poetry]
-name = "blockscrape-mining-client"
+name = "blockscrape-result-server"
 version = "0.1.0"
 description = ""
 authors = ["Lars Jaeger <lars@jgr.one>"]
 readme = "README.md"
-packages = [{include = "blockscrape_mining_client"}]
+packages = [{include = "blockscrape_result_server"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-python-socketio = "^5.8.0"
-httpx = "^0.24.1"
-socketio = {extras = ["asyncclient"], version = "^0.2.1"}
-pydantic = "^2.1.1"
 
 
 [tool.poetry.group.dev.dependencies]
 setuptools = "^68.0.0"
-
 
 [build-system]
 requires = ["poetry-core"]
