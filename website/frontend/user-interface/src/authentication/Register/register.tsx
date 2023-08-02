@@ -10,8 +10,10 @@ import {
     Button, Checkbox,
 } from '@mantine/core';
 import {DatePickerInput} from '@mantine/dates';
+import {Link} from "react-router-dom";
 import {useForm} from "@mantine/form";
 import {register} from "../user";
+import {Notifications} from "@mantine/notifications";
 
 export function RegisterForm() {
     const form = useForm({
@@ -91,6 +93,7 @@ export function RegisterForm() {
                     </Group>
                 </form>
             </Paper>
+            <Notifications/>
         </Container>
     );
 }

@@ -13,6 +13,7 @@ import {Link} from 'react-router-dom';
 import {login} from "./user";
 import {useForm} from '@mantine/form';
 import React, {useState} from 'react';
+import {Notifications} from "@mantine/notifications";
 
 export function AuthenticationForm() {
     const [message, setMessage] = useState('');
@@ -52,12 +53,14 @@ export function AuthenticationForm() {
                         {...form.getInputProps('username')}
                         required
                     />
-                    <PasswordInput label="Password" placeholder="Your password" {...form.getInputProps('password')} required mt="md"/>
+                    <PasswordInput label="Password" placeholder="Your password" {...form.getInputProps('password')}
+                                   required mt="md"/>
                     <Group position="right" mt="md">
                         <Button type="submit">Submit</Button>
                     </Group>
                 </form>
             </Paper>
+            <Notifications/>
         </Container>
     )
         ;

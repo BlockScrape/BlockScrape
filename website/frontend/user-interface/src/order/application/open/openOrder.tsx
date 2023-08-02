@@ -1,6 +1,6 @@
-import {Modal, Button, Group, TextInput, NumberInput, Checkbox, Center, ThemeIcon, Flex} from '@mantine/core';
+import {Modal, Button, Flex} from '@mantine/core';
 import {useDisclosure} from '@mantine/hooks';
-import {RiDeleteBin2Fill, RiEdit2Fill} from "react-icons/ri";
+import {RiDeleteBin2Fill} from "react-icons/ri";
 import React from "react";
 import {deleteOrder} from "../fetch/orderBackend";
 

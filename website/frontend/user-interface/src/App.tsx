@@ -14,15 +14,15 @@ import NotFound from "./global/404/404";
 export default function App() {
     return (
         <BrowserRouter>
-      <Routes>
-          <Route index element={<MainPage />} />
-          <Route path="/authenticationForm" element={<AuthenticationForm/>} />
-          <Route path="/registerForm" element={<RegisterForm />} />
-          <Route path="/orderPage" element={<OrderPage/>}/>
-          <Route path="/coinPage" element={<CoinPage/>}/>
-          <Route path="/impressum" element={<Impressum/>}/>
-          <Route path="*" element={<NotFound/>}/>
-      </Routes>
-    </BrowserRouter>
+            <Routes>
+                <Route index element={<MainPage/>}/>
+                <Route path="/authenticationForm" element={<AuthenticationForm/>}/>
+                <Route path="/registerForm" element={<RegisterForm/>}/>
+                <Route path="/orderPage" element={<OrderPage/>}/>
+                <Route path="/coinPage" element={<CoinPage/>}/>
+                <Route path="/impressum" element={<Impressum/>}/>
+                <Route path="*" element={<NotFound/>}/>
+            </Routes>
+        </BrowserRouter>
     );
 }

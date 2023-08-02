@@ -13,7 +13,8 @@ import {
 import {MainLinks} from '../global/_mainLinks';
 import {AuthenticationForm} from "../authentication/authentication";
 import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
-import {getCredentialCookie} from "../global/constants/constants";
+import {getCredentialCookie, logout} from "../global/constants/constants";
+import {CoinApplication} from "./application/application";
 
 export default function CoinPage() {
     const theme = useMantineTheme();
@@ -80,13 +81,30 @@ export default function CoinPage() {
                             />
                         </MediaQuery>
 
-                        <Text>Baba Header</Text>
+                        <Flex
+                            gap="md"
+                            justify="right"
+                            align="flex-start"
+                            direction="row"
+                            wrap="wrap"
+                        >
+                            <div>
+                                <Anchor component={Link} to="/" unstyled={true}>
+                                    BlockScrape
+                                </Anchor>
+                            </div>
+                            <div style={{marginRight: 0}}>
+                                <Anchor onClick={() => logout()}>
+                                    Logout
+                                </Anchor>
+                            </div>
+                        </Flex>
                     </div>
                 </Header>
             }
 
         >
-            <Text>Rjkjhkfhgk</Text>
+            <CoinApplication/>
         </AppShell>
     );
 }

@@ -15,8 +15,9 @@ import {
 } from '@mantine/core';
 import {MainLinks} from '../global/_mainLinks';
 import {AuthenticationForm} from "../authentication/authentication";
-import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
-import {getCredentialCookie} from "../global/constants/constants";
+import {Link} from "react-router-dom";
+import {getCredentialCookie, logout} from "../global/constants/constants";
+import {WelcomeApplication} from "./application/application";
 
 export default function MainPage() {
     const theme = useMantineTheme();
@@ -83,13 +84,30 @@ export default function MainPage() {
                             />
                         </MediaQuery>
 
-                        <Text>Baba Header</Text>
+                        <Flex
+                            gap="md"
+                            justify="right"
+                            align="flex-start"
+                            direction="row"
+                            wrap="wrap"
+                        >
+                            <div>
+                                <Anchor component={Link} to="/" unstyled={true}>
+                                    BlockScrape
+                                </Anchor>
+                            </div>
+                            <div style={{marginRight: 0}}>
+                                <Anchor onClick={() => logout()}>
+                                    Logout
+                                </Anchor>
+                            </div>
+                        </Flex>
                     </div>
                 </Header>
             }
 
         >
-            <Text>Resize app to see responsive navbar in action</Text>
+            <WelcomeApplication/>
         </AppShell>
     )
         ;

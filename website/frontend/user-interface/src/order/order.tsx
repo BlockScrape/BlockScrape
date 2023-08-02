@@ -13,10 +13,11 @@ import {
 import {MainLinks} from '../global/_mainLinks';
 import {AuthenticationForm} from "../authentication/authentication";
 import {Link} from "react-router-dom";
-import {getCredentialCookie} from "../global/constants/constants";
+import {getCredentialCookie, logout} from "../global/constants/constants";
 import {OrderModal} from "./application/add/addOrder";
 import OrderApplication from "./application/application";
 import {AiOutlineShoppingCart} from "react-icons/ai";
+import {Notifications} from "@mantine/notifications";
 
 export default function OrderPage() {
     const theme = useMantineTheme();
@@ -83,20 +84,37 @@ export default function OrderPage() {
                             />
                         </MediaQuery>
 
-                        <Text>Baba Header</Text>
+                        <Flex
+                            gap="md"
+                            justify="right"
+                            align="flex-start"
+                            direction="row"
+                            wrap="wrap"
+                        >
+                            <div>
+                                <Anchor component={Link} to="/" unstyled={true}>
+                                    BlockScrape
+                                </Anchor>
+                            </div>
+                            <div style={{marginRight: 0}}>
+                                <Anchor onClick={() => logout()}>
+                                    Logout
+                                </Anchor>
+                            </div>
+                        </Flex>
                     </div>
                 </Header>
             }
 
         >
             <Flex
-                    mih={50}
-                    gap="md"
-                    justify="center"
-                    align="flex-start"
-                    direction="row"
-                    wrap="wrap"
-                >
+                mih={50}
+                gap="md"
+                justify="center"
+                align="flex-start"
+                direction="row"
+                wrap="wrap"
+            >
                 <Group>
                     <h1 color="teal">Your Orders</h1>
                     {<AiOutlineShoppingCart size="2rem"/>}
@@ -110,6 +128,7 @@ export default function OrderPage() {
             <br/>
             <br/>
             <OrderModal/>
+            <Notifications/>
         </AppShell>
     );
 }

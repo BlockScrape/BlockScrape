@@ -36,7 +36,7 @@ export default function OrderApplication() {
             console.log(response)
             setData(temp)
         });
-    },[]);
+    }, []);
     return (
         <Table highlightOnHover withBorder>
             <thead>
