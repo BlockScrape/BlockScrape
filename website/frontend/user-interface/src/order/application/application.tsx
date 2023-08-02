@@ -22,11 +22,11 @@ export default function OrderApplication() {
     const [contentData, setData] = useState(rows);
     useEffect(() => {
         getOrders().then((response) => {
-            let temp = response[0].map((element: { uuid: string; name: string; url: string; start_timestamp: number; intervall: number; repetitions: number; }) => (
+            let temp = response[0].map((element: { uuid: string; name: string; scraping_url: string; start_timestamp: number; intervall: number; repetitions: number; }) => (
                     <OpenOrder
                         uuid={element.uuid}
                         name={element.name}
-                        url={element.url}
+                        url={element.scraping_url}
                         starting_date={new Date(element.start_timestamp * 1000)}
                         intervall={element.intervall}
                         repetitions={element.repetitions}
