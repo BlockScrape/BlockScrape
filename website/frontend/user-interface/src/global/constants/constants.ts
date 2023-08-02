@@ -21,14 +21,14 @@ HTTP_METHOD_DELETE = "DELETE",
 HTTP_METHOD_GET = "GET";
 
 const HTTP_JSON_HEADERS = {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
+    'Accept': 'application/json_data',
+    'Content-Type': 'application/json_data'
 };
 
 const HTTP_JSON_HEADERS_WITH_AUTH = (auth_token: string) => {
     return {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        'Accept': 'application/json_data',
+        'Content-Type': 'application/json_data',
         'Authorization': 'Bearer ' + auth_token
     };
 };
