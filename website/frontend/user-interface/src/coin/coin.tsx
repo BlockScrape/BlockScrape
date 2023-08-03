@@ -4,21 +4,23 @@ import {
     Navbar,
     Header,
     Footer,
-    Aside,
     Text,
     MediaQuery,
     Burger,
-    useMantineTheme, Anchor, Flex,
+    useMantineTheme, Anchor, Flex, ActionIcon, useMantineColorScheme,
 } from '@mantine/core';
 import {MainLinks} from '../global/_mainLinks';
 import {AuthenticationForm} from "../authentication/authentication";
-import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {getCredentialCookie, logout} from "../global/constants/constants";
 import {CoinApplication} from "./application/application";
+import {IconMoonStars, IconSun} from "@tabler/icons-react";
 
 export default function CoinPage() {
     const theme = useMantineTheme();
     const [opened, setOpened] = useState(false);
+    const {colorScheme, toggleColorScheme} = useMantineColorScheme();
+    const dark = colorScheme === 'dark';
     if (getCredentialCookie() === undefined) {
         return <AuthenticationForm/>
     }
@@ -93,12 +95,31 @@ export default function CoinPage() {
                                     BlockScrape
                                 </Anchor>
                             </div>
-                            <div style={{marginRight: 0}}>
+
+
+                        </Flex>
+                        <div style={{marginLeft: "auto"}}>
+                            <Flex
+                                gap="md"
+                                justify="right"
+                                align="flex-start"
+                                direction="row"
+                                wrap="wrap"
+                            >
                                 <Anchor onClick={() => logout()}>
                                     Logout
                                 </Anchor>
-                            </div>
-                        </Flex>
+
+                                <ActionIcon
+                                    variant="outline"
+                                    color={dark ? 'yellow' : 'blue'}
+                                    onClick={() => toggleColorScheme()}
+                                    title="Toggle color scheme"
+                                >
+                                    {dark ? <IconSun size="1.1rem"/> : <IconMoonStars size="1.1rem"/>}
+                                </ActionIcon>
+                            </Flex>
+                        </div>
                     </div>
                 </Header>
             }

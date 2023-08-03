@@ -84,7 +84,7 @@ export function register(value: { first_name: string, last_name: string, birthda
                 title: "Okay",
                 message: "REGISTERED",
                 icon: <IconCheck/>,
-                color: "red"
+                color: "green"
             });
             return response.json();
         })

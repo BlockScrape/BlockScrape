@@ -1,14 +1,18 @@
 import React, {useState} from 'react';
 import {
+    ActionIcon,
+    Anchor,
     AppShell,
-    Navbar,
-    Header,
-    Footer,
-    Aside,
-    Text,
-    MediaQuery,
     Burger,
-    useMantineTheme, Anchor, Flex, Center, ThemeIcon, Group,
+    Flex,
+    Footer,
+    Group,
+    Header,
+    MediaQuery,
+    Navbar,
+    Text,
+    useMantineColorScheme,
+    useMantineTheme,
 } from '@mantine/core';
 import {MainLinks} from '../global/_mainLinks';
 import {AuthenticationForm} from "../authentication/authentication";
@@ -18,10 +22,13 @@ import {OrderModal} from "./application/add/addOrder";
 import OrderApplication from "./application/application";
 import {AiOutlineShoppingCart} from "react-icons/ai";
 import {Notifications} from "@mantine/notifications";
+import {IconMoonStars, IconSun} from "@tabler/icons-react";
 
 export default function OrderPage() {
     const theme = useMantineTheme();
     const [opened, setOpened] = useState(false);
+    const {colorScheme, toggleColorScheme} = useMantineColorScheme();
+    const dark = colorScheme === 'dark';
     if (getCredentialCookie() === undefined) {
         return <AuthenticationForm/>
     }
@@ -96,12 +103,31 @@ export default function OrderPage() {
                                     BlockScrape
                                 </Anchor>
                             </div>
-                            <div style={{marginRight: 0}}>
+
+
+                        </Flex>
+                        <div style={{marginLeft: "auto"}}>
+                            <Flex
+                                gap="md"
+                                justify="right"
+                                align="flex-start"
+                                direction="row"
+                                wrap="wrap"
+                            >
                                 <Anchor onClick={() => logout()}>
                                     Logout
                                 </Anchor>
-                            </div>
-                        </Flex>
+
+                                <ActionIcon
+                                    variant="outline"
+                                    color={dark ? 'yellow' : 'blue'}
+                                    onClick={() => toggleColorScheme()}
+                                    title="Toggle color scheme"
+                                >
+                                    {dark ? <IconSun size="1.1rem"/> : <IconMoonStars size="1.1rem"/>}
+                                </ActionIcon>
+                            </Flex>
+                        </div>
                     </div>
                 </Header>
             }
