@@ -7,15 +7,20 @@ import {
     Text,
     Container,
     Group,
-    Button
+    Button,
+    ActionIcon,
+    useMantineColorScheme
 } from '@mantine/core';
 import {Link} from 'react-router-dom';
 import {login} from "./user";
 import {useForm} from '@mantine/form';
-import React, {useState} from 'react';
+import React from 'react';
+import {Notifications} from "@mantine/notifications";
+import {IconSun, IconMoonStars} from '@tabler/icons-react';
 
 export function AuthenticationForm() {
-    const [message, setMessage] = useState('');
+    const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+    const dark = colorScheme === 'dark';
     const form = useForm({
         initialValues: {
             username: '',
@@ -29,36 +34,49 @@ export function AuthenticationForm() {
     };
 
     return (
-        <Container size={420} my={40}>
-            <Title
-                align="center"
-                sx={(theme) => ({fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900})}
+        <>
+            <ActionIcon
+                variant="outline"
+                color={dark ? 'yellow' : 'blue'}
+                onClick={() => toggleColorScheme()}
+                title="Toggle color scheme"
             >
-                Welcome back!
-            </Title>
-            <Text color="dimmed" size="sm" align="center" mt={5}>
-                Do not have an account yet?{' '}
-                <Anchor component={Link} to="/RegisterForm">
-                    Create Account
-                </Anchor>
-            </Text>
+                {dark ? <IconSun size="1.1rem"/> : <IconMoonStars size="1.1rem"/>}
+            </ActionIcon>
+            <Container size={420} my={40}>
+                <Title
+                    align="center"
+                    sx={(theme) => ({fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900})}
+                >
+                    Welcome back!
+                </Title>
+                <Text color="dimmed" size="sm" align="center" mt={5}>
+                    Do not have an account yet?{' '}
+                    <Anchor component={Link} to="/RegisterForm">
+                        Create Account
+                    </Anchor>
+                </Text>
 
-            <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-                <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-                    <TextInput
-                        withAsterisk
-                        label="Username"
-                        placeholder="username"
-                        {...form.getInputProps('username')}
-                        required
-                    />
-                    <PasswordInput label="Password" placeholder="Your password" {...form.getInputProps('password')} required mt="md"/>
-                    <Group position="right" mt="md">
-                        <Button type="submit">Submit</Button>
-                    </Group>
-                </form>
-            </Paper>
-        </Container>
+                <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+                    <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+                        <TextInput
+                            withAsterisk
+                            label="Username"
+                            placeholder="username"
+                            {...form.getInputProps('username')}
+                            required
+                        />
+                        <PasswordInput label="Password" placeholder="Your password" {...form.getInputProps('password')}
+                                       required mt="md"/>
+                        <Group position="right" mt="md">
+                            <Button type="submit">Submit</Button>
+                        </Group>
+                    </form>
+                </Paper>
+
+            </Container>
+            <Notifications/>
+        </>
     )
         ;
 }

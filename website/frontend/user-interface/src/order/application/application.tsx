@@ -1,7 +1,6 @@
 import {Table} from '@mantine/core';
 import {OpenOrder} from "./open/openOrder";
 import {getOrders} from "./fetch/orderBackend";
-import {getCredentialCookie, HTTP_AUTH_HEADERS} from "../../global/constants/constants";
 import {useEffect, useState} from "react";
 
 export default function OrderApplication() {
@@ -36,7 +35,7 @@ export default function OrderApplication() {
             console.log(response)
             setData(temp)
         });
-    },[]);
+    }, []);
     return (
         <Table highlightOnHover withBorder>
             <thead>

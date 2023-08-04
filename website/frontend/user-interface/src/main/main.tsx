@@ -4,23 +4,25 @@ import {
     Navbar,
     Header,
     Footer,
-    Aside,
     Text,
     MediaQuery,
     Burger,
     useMantineTheme,
     Anchor,
-    Center,
-    Flex
+    Flex, ActionIcon, useMantineColorScheme
 } from '@mantine/core';
 import {MainLinks} from '../global/_mainLinks';
 import {AuthenticationForm} from "../authentication/authentication";
-import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
-import {getCredentialCookie} from "../global/constants/constants";
+import {Link} from "react-router-dom";
+import {getCredentialCookie, logout} from "../global/constants/constants";
+import {WelcomeApplication} from "./application/application";
+import {IconMoonStars, IconSun} from "@tabler/icons-react";
 
 export default function MainPage() {
     const theme = useMantineTheme();
     const [opened, setOpened] = useState(false);
+    const {colorScheme, toggleColorScheme} = useMantineColorScheme();
+    const dark = colorScheme === 'dark';
     if (getCredentialCookie() === undefined) {
         return <AuthenticationForm/>
     }
@@ -83,13 +85,49 @@ export default function MainPage() {
                             />
                         </MediaQuery>
 
-                        <Text>Baba Header</Text>
+                        <Flex
+                            gap="md"
+                            justify="right"
+                            align="flex-start"
+                            direction="row"
+                            wrap="wrap"
+                        >
+                            <div>
+                                <Anchor component={Link} to="/" unstyled={true}>
+                                    BlockScrape
+                                </Anchor>
+                            </div>
+
+
+                        </Flex>
+                        <div style={{marginLeft: "auto"}}>
+                            <Flex
+                                gap="md"
+                                justify="right"
+                                align="flex-start"
+                                direction="row"
+                                wrap="wrap"
+                            >
+                                <Anchor onClick={() => logout()}>
+                                    Logout
+                                </Anchor>
+
+                                <ActionIcon
+                                    variant="outline"
+                                    color={dark ? 'yellow' : 'blue'}
+                                    onClick={() => toggleColorScheme()}
+                                    title="Toggle color scheme"
+                                >
+                                    {dark ? <IconSun size="1.1rem"/> : <IconMoonStars size="1.1rem"/>}
+                                </ActionIcon>
+                            </Flex>
+                        </div>
                     </div>
                 </Header>
             }
 
         >
-            <Text>Resize app to see responsive navbar in action</Text>
+            <WelcomeApplication/>
         </AppShell>
     )
         ;

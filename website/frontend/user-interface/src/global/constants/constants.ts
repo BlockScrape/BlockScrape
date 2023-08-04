@@ -1,11 +1,11 @@
 import Cookies from "universal-cookie";
 
-const REQUEST_URL = 'http://localhost:6543',
+const REQUEST_URL = "http://" + window.location.hostname + ":6543",
     USER_URL = '/user',
     LOGIN_TOKEN = '/token',
     TOKEN_EXPIRE_HOURS = 10,
     USER_CREATE_URL = USER_URL + '/create',
-    VALIDATE_TOKEN = USER_URL + '/me',
+    USER_INFO = USER_URL + '/me',
     ORDER_URL = '/order',
     ORDER_INFO = ORDER_URL + '/info',
     ORDER_CREATE = ORDER_URL + '/create',
@@ -14,21 +14,21 @@ const REQUEST_URL = 'http://localhost:6543',
     COIN_INFO = COIN_URL + '/info'
 
 const HTTP_STATUS_OK = 200,
-HTTP_STATUS_CREATED = 201,
-HTTP_METHOD_POST = "POST",
-HTTP_METHOD_PUT = "PUT",
-HTTP_METHOD_DELETE = "DELETE",
-HTTP_METHOD_GET = "GET";
+    HTTP_STATUS_CREATED = 201,
+    HTTP_METHOD_POST = "POST",
+    HTTP_METHOD_PUT = "PUT",
+    HTTP_METHOD_DELETE = "DELETE",
+    HTTP_METHOD_GET = "GET";
 
 const HTTP_JSON_HEADERS = {
-    'Accept': 'application/json_data',
-    'Content-Type': 'application/json_data'
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
 };
 
 const HTTP_JSON_HEADERS_WITH_AUTH = (auth_token: string) => {
     return {
-        'Accept': 'application/json_data',
-        'Content-Type': 'application/json_data',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + auth_token
     };
 };
@@ -40,15 +40,21 @@ const HTTP_AUTH_HEADERS = (auth_token: string) => {
 }
 
 function setCredentialCookie(value: string, expires: number) {
-    const cookies = new Cookies()
+    const cookies = new Cookies();
     let date = new Date();
-    date.setTime(date.getTime() + (expires * 60 * 60 * 1000))
-    cookies.set("token", value, {expires: date, path: '/'})
+    date.setTime(date.getTime() + (expires * 60 * 60 * 1000));
+    cookies.set("token", value, {expires: date, path: '/'});
 }
 
 function getCredentialCookie() {
-    const cookies = new Cookies()
+    const cookies = new Cookies();
     return cookies.get("token");
+}
+
+function logout() {
+    const cookies = new Cookies();
+    cookies.remove("token");
+    window.location.reload();
 }
 
 function doUtcDate(date: Date) {
@@ -110,8 +116,9 @@ export {
     HTTP_METHOD_DELETE,
     HTTP_STATUS_OK,
     TOKEN_EXPIRE_HOURS,
-    VALIDATE_TOKEN,
+    USER_INFO,
     doUtcDate,
     setCredentialCookie,
-    getCredentialCookie
+    getCredentialCookie,
+    logout
 }

@@ -10,6 +10,8 @@ import {
     ORDER_INFO,
     REQUEST_URL
 } from "../../../global/constants/constants";
+import {notifications} from "@mantine/notifications";
+import {IconX} from "@tabler/icons-react";
 
 export function getOrders() {
     return Promise.all([getOrderInfo()])
@@ -22,7 +24,7 @@ function getOrderInfo() {
             headers: HTTP_AUTH_HEADERS(getCredentialCookie())
         })
         .then(response => {
-            if (response.status != HTTP_STATUS_OK) {
+            if (response.status !== HTTP_STATUS_OK) {
                 alert("Nope")
                 return;
             }
@@ -34,6 +36,17 @@ function getOrderInfo() {
             }
             return [];
         })
+        .catch(rejected => {
+            console.log(rejected)
+            notifications.show({
+                id: "register-error",
+                withCloseButton: true,
+                title: "Error",
+                message: "Backend not Reachable",
+                icon: <IconX/>,
+                color: "red"
+            });
+        });
 }
 
 export function saveOrder(data: { website_name: string; starting_date: Date; intervall_time: number; termsOfService: boolean; url: string; repetitions: number }) {
@@ -51,7 +64,7 @@ export function saveOrder(data: { website_name: string; starting_date: Date; int
         body: JSON.stringify(dataToSend)
     })
         .then(response => {
-            if (response.status != HTTP_STATUS_CREATED) {
+            if (response.status !== HTTP_STATUS_CREATED) {
                 alert("Nope");
                 return;
             }
@@ -62,6 +75,17 @@ export function saveOrder(data: { website_name: string; starting_date: Date; int
                 window.location.reload();
             }
         })
+        .catch(rejected => {
+            console.log(rejected)
+            notifications.show({
+                id: "register-error",
+                withCloseButton: true,
+                title: "Error",
+                message: "Backend not Reachable",
+                icon: <IconX/>,
+                color: "red"
+            });
+        });
 }
 
 export function deleteOrder(dataUuid: string) {
@@ -74,7 +98,7 @@ export function deleteOrder(dataUuid: string) {
         body: JSON.stringify(data)
     })
         .then(response => {
-            if (response.status != HTTP_STATUS_OK) {
+            if (response.status !== HTTP_STATUS_OK) {
                 alert("Nope")
                 return;
             }
@@ -85,4 +109,15 @@ export function deleteOrder(dataUuid: string) {
                 window.location.reload();
             }
         })
+        .catch(rejected => {
+            console.log(rejected)
+            notifications.show({
+                id: "register-error",
+                withCloseButton: true,
+                title: "Error",
+                message: "Backend not Reachable",
+                icon: <IconX/>,
+                color: "red"
+            });
+        });
 }

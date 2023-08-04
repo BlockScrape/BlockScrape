@@ -1,26 +1,34 @@
 import React, {useState} from 'react';
 import {
+    ActionIcon,
+    Anchor,
     AppShell,
-    Navbar,
-    Header,
-    Footer,
-    Aside,
-    Text,
-    MediaQuery,
     Burger,
-    useMantineTheme, Anchor, Flex, Center, ThemeIcon, Group,
+    Flex,
+    Footer,
+    Group,
+    Header,
+    MediaQuery,
+    Navbar,
+    Text,
+    useMantineColorScheme,
+    useMantineTheme,
 } from '@mantine/core';
 import {MainLinks} from '../global/_mainLinks';
 import {AuthenticationForm} from "../authentication/authentication";
 import {Link} from "react-router-dom";
-import {getCredentialCookie} from "../global/constants/constants";
+import {getCredentialCookie, logout} from "../global/constants/constants";
 import {OrderModal} from "./application/add/addOrder";
 import OrderApplication from "./application/application";
 import {AiOutlineShoppingCart} from "react-icons/ai";
+import {Notifications} from "@mantine/notifications";
+import {IconMoonStars, IconSun} from "@tabler/icons-react";
 
 export default function OrderPage() {
     const theme = useMantineTheme();
     const [opened, setOpened] = useState(false);
+    const {colorScheme, toggleColorScheme} = useMantineColorScheme();
+    const dark = colorScheme === 'dark';
     if (getCredentialCookie() === undefined) {
         return <AuthenticationForm/>
     }
@@ -83,20 +91,56 @@ export default function OrderPage() {
                             />
                         </MediaQuery>
 
-                        <Text>Baba Header</Text>
+                        <Flex
+                            gap="md"
+                            justify="right"
+                            align="flex-start"
+                            direction="row"
+                            wrap="wrap"
+                        >
+                            <div>
+                                <Anchor component={Link} to="/" unstyled={true}>
+                                    BlockScrape
+                                </Anchor>
+                            </div>
+
+
+                        </Flex>
+                        <div style={{marginLeft: "auto"}}>
+                            <Flex
+                                gap="md"
+                                justify="right"
+                                align="flex-start"
+                                direction="row"
+                                wrap="wrap"
+                            >
+                                <Anchor onClick={() => logout()}>
+                                    Logout
+                                </Anchor>
+
+                                <ActionIcon
+                                    variant="outline"
+                                    color={dark ? 'yellow' : 'blue'}
+                                    onClick={() => toggleColorScheme()}
+                                    title="Toggle color scheme"
+                                >
+                                    {dark ? <IconSun size="1.1rem"/> : <IconMoonStars size="1.1rem"/>}
+                                </ActionIcon>
+                            </Flex>
+                        </div>
                     </div>
                 </Header>
             }
 
         >
             <Flex
-                    mih={50}
-                    gap="md"
-                    justify="center"
-                    align="flex-start"
-                    direction="row"
-                    wrap="wrap"
-                >
+                mih={50}
+                gap="md"
+                justify="center"
+                align="flex-start"
+                direction="row"
+                wrap="wrap"
+            >
                 <Group>
                     <h1 color="teal">Your Orders</h1>
                     {<AiOutlineShoppingCart size="2rem"/>}
@@ -110,6 +154,7 @@ export default function OrderPage() {
             <br/>
             <br/>
             <OrderModal/>
+            <Notifications/>
         </AppShell>
     );
 }

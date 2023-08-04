@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Body, status
 from fastapi.responses import JSONResponse
+import random
 
 router = APIRouter(
     prefix="/coin",
@@ -11,4 +12,4 @@ router = APIRouter(
 
 @router.get("/info")
 async def getCoins():
-    return {"coin": 132.451346}
+    return {"coin": round(random.random()*200, 2)}

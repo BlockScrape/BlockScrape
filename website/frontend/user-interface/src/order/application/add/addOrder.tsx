@@ -4,7 +4,6 @@ import {DateTimePicker} from '@mantine/dates'
 import React from "react";
 import {RiAddBoxFill} from "react-icons/ri";
 import {useForm} from "@mantine/form";
-import {register} from "../../../authentication/user";
 import {saveOrder} from "../fetch/orderBackend";
 
 export function OrderModal() {
