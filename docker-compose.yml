@@ -42,8 +42,6 @@ services:
     build: ./website/frontend/user-interface
     ports:
       - "99:99"
-    expose:
-      - 99
     depends_on:
       user_backend:
         condition: service_started
@@ -54,8 +52,6 @@ services:
     build: ./website/backend
     ports:
       - "6543:6543"
-    expose:
-      - 6543
     depends_on:
       cassandra:
         condition: service_healthy
@@ -76,8 +72,6 @@ services:
     build: ./authentitication/server
     ports:
       - "7979:7979"
-    expose:
-      - 7979
     depends_on:
       cassandra:
         condition: service_healthy
@@ -96,9 +90,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    expose:
-      - 80
-      - 443
     networks:
       - mining
       - scheduling
@@ -106,6 +97,20 @@ services:
     build: ./scheduling
     networks:
       - scheduling
+  mining_store:
+    image: redis:7.0-alpine
+    restart: always
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
+  scheduling_store:
+    image: redis:7.0-alpine
+    restart: always
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
 networks:
   website:
     external: true
