@@ -19,15 +19,9 @@ class TaskSchema(BaseModel):
     id: str
     method: RequestMethod
     url: str
-    params: str | dict
     headers: str
     content: bytes
-    data: dict
-    files: dict
-    json_data: str
-    headers: dict
-    cookies: dict
-
+    creator_user: str
     validated: bool = False
     pending_users: List[Tuple[str, int]]
     finished_users: List[Tuple[str, int]]

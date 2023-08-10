@@ -49,13 +49,16 @@ function getOrderInfo() {
         });
 }
 
-export function saveOrder(data: { website_name: string; starting_date: Date; intervall_time: number; termsOfService: boolean; url: string; repetitions: number }) {
+export function saveOrder(data: {website_name: string, url: string, request_method: string, request_body: string, request_header: string, starting_date: Date, intervall_time: number, repetitions: number, termsOfService: boolean}) {
     const dataToSend = {
         name: data.website_name,
         url: data.url,
         starting_time: doUtcDate(data.starting_date).getTime(),
         intervall_time: data.intervall_time,
-        repetitions: data.repetitions
+        repetitions: data.repetitions,
+        request_method: data.request_method,
+        request_body: data.request_body,
+        request_header: data.request_header
     }
 
     fetch(REQUEST_URL + ORDER_CREATE, {

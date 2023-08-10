@@ -1,5 +1,5 @@
 import {useDisclosure} from '@mantine/hooks';
-import {Button, Center, Checkbox, Group, Modal, NumberInput, TextInput} from '@mantine/core';
+import {Button, Center, Checkbox, Group, Modal, NumberInput, Select, TextInput} from '@mantine/core';
 import {DateTimePicker} from '@mantine/dates'
 import React from "react";
 import {RiAddBoxFill} from "react-icons/ri";
@@ -12,6 +12,9 @@ export function OrderModal() {
         initialValues: {
             website_name: '',
             url: '',
+            request_method: 'GET',
+            request_body: '',
+            request_header: '',
             starting_date: new Date(),
             intervall_time: 30,
             repetitions: 1,
@@ -19,7 +22,7 @@ export function OrderModal() {
         }
     });
 
-    const handleSubmit = (value: ReturnType<(values: { website_name: string; starting_date: Date; intervall_time: number; termsOfService: boolean; url: string; repetitions: number }) => { website_name: string; starting_date: Date; intervall_time: number; termsOfService: boolean; url: string; repetitions: number }>) => {
+    const handleSubmit = (value: ReturnType<(values: {website_name: string, url: string, request_method: string, request_body: string, request_header: string, starting_date: Date, intervall_time: number, repetitions: number, termsOfService: boolean}) => {website_name: string, url: string, request_method: string, request_body: string, request_header: string, starting_date: Date, intervall_time: number, repetitions: number, termsOfService: boolean}>) => {
 
         if (value.termsOfService) {
             console.log(value)
@@ -34,25 +37,45 @@ export function OrderModal() {
                     <DateTimePicker
                         withSeconds
                         label="Pick date and time"
-                        placeholder="Pick date and time"
-                        maw={400}
+                        placeholder="Date and Time is in UTC"
                         mx="auto"
                         {...form.getInputProps('starting_date')}
                         required
                     />
-                    <br/>
                     <TextInput
                         label="Name"
                         placeholder="WebsiteName"
                         {...form.getInputProps('website_name')}
                         required/>
-                    <br/>
                     <TextInput
                         label="Url"
                         placeholder="www.temp.de"
                         {...form.getInputProps('url')}
                         required/>
-                    <br/>
+                    <Select
+                        label="Request Method"
+                        placeholder="Pick your request method"
+                        data={[
+                            {value: 'GET', label: 'GET'},
+                            {value: 'POST', label: 'POST'},
+                            {value: 'PUT', label: 'PUT'},
+                            {value: 'DELETE', label: 'DELETE'},
+                            {value: 'PATCH', label: 'PATCH'},
+                            {value: 'OPTIONS', label: 'OPTIONS'},
+                            {value: 'HEAD', label: 'HEAD'}
+                        ]}
+                        {...form.getInputProps('request_method')}
+                        required
+                    />
+                    <TextInput
+                        label="Request Header"
+                        placeholder="Put your header"
+                        {...form.getInputProps('request_header')}/>
+                    <TextInput
+                        label="Request Body"
+                        placeholder="Put your body"
+                        {...form.getInputProps('request_body')}
+                        />
                     <NumberInput
                         label="Intervall-Time"
                         description="In seconds from 30 to 86400"
@@ -62,7 +85,6 @@ export function OrderModal() {
                         {...form.getInputProps('intervall_time')}
                         required
                     />
-                    <br/>
                     <NumberInput
                         label="Repetitions"
                         description="How often should the website be scraped? From 1 to 100"

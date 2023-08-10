@@ -5,13 +5,14 @@ from uuid import uuid4, UUID
 
 
 def create_order(username: str, name: str, scraping_url, start_timestamp: int, repetitions: int, intervall: int,
-                 session: Session):
+                 request_method: str, request_header: str, request_body: str, session: Session):
     try:
         session.execute(
-            "INSERT INTO order_list (uuid, creator_username, name, scraping_url, start_timestamp, repetitions, intervall)"
-            "VALUES (%(id)s, %(creator_user)s, %(scrape_name)s, %(scrape_url)s, %(timestamp)s, %(repetit)s, %(interv)s)",
+            "INSERT INTO order_list (uuid, creator_username, name, scraping_url, start_timestamp, repetitions, intervall, request_header, request_body, request_method, next_scrape, last_updated, finished)"
+            "VALUES (%(id)s, %(creator_user)s, %(scrape_name)s, %(scrape_url)s, %(timestamp)s, %(repetit)s, %(interv)s, %(r_header)s, %(r_body)s, %(r_method)s), %(timestamp)s, %(timestamp)s, %(finishe)s",
             {'id': uuid4(), 'creator_user': username, 'scrape_name': name, 'scrape_url': scraping_url,
-             'timestamp': int(start_timestamp/1000), 'repetit': repetitions, 'interv': intervall})
+             'timestamp': int(start_timestamp / 1000), 'repetit': repetitions, 'interv': intervall,
+             'r_header': request_header, 'r_body': request_body, 'r_method': request_method, 'finishe': False})
         return JSONResponse(status_code=status.HTTP_201_CREATED, content="Order created")
     except:
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content="Error in Database")
@@ -20,7 +21,7 @@ def create_order(username: str, name: str, scraping_url, start_timestamp: int, r
 def get_orders(username: str, session: Session):
     try:
         rows = session.execute(
-            "SELECT uuid, name, creator_username, scraping_url, start_timestamp, repetitions, intervall FROM order_list "
+            "SELECT * FROM order_list "
             "WHERE creator_username=%s ALLOW FILTERING", [username])
         return get_data_list_with_keys(rows.current_rows)
     except:
@@ -30,7 +31,7 @@ def get_orders(username: str, session: Session):
 def get_order(uuid: str, session: Session):
     casted_uuid = UUID(uuid)
     rows = session.execute(
-        "SELECT uuid, name, creator_username, scraping_url, start_timestamp, repetitions, intervall FROM order_list WHERE uuid=%s",
+        "SELECT * FROM order_list WHERE uuid=%s",
         [casted_uuid])
     if len(rows.current_rows) == 1:
         return get_data_with_keys(rows.current_rows[0])
@@ -61,4 +62,6 @@ def get_data_list_with_keys(rows):
 def get_data_with_keys(row):
     return {'uuid': row.uuid, 'name': row.name, 'creator_username': row.creator_username,
             'scraping_url': row.scraping_url, 'start_timestamp': row.start_timestamp, 'repetitions': row.repetitions,
-            'intervall': row.intervall}
+            'intervall': row.intervall, 'request_header': row.request_header, 'request_body': row.request_body,
+            'request_method': row.request_method, 'next_scrape': row.next_scrape, 'last_updated': row.last_updated,
+            'finished': row.finished}

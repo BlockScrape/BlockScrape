@@ -27,13 +27,20 @@ async def create(name: str = Body(embed=True),
                  starting_time: int = Body(embed=True),
                  intervall_time: int = Body(embed=True),
                  repetitions: int = Body(embed=True),
+                 request_header: str = Body(embed=True),
+                 request_body: str = Body(embed=True),
+                 request_method: str = Body(embed=True),
                  auth_user=Depends(get_current_user),
                  session: Session = Depends(get_database_session)):
     if auth_user is not None:
         if repetitions is not None and intervall_time is not None and starting_time is not None \
-                and url is not None and name is not None and session is not None:
+                and url is not None and name is not None and session is not None and request_method is not None and \
+                (request_method == "POST" or request_method == "PUT" or request_method == "GET"
+                 or request_method == "PATCH" or request_method == "DELETE" or request_method == "OPTIONS"
+                 or request_method == "HEAD") and request_header is not None and request_body is not None:
             return create_order(name=name, scraping_url=url, start_timestamp=starting_time, intervall=intervall_time,
-                                repetitions=repetitions, username=auth_user['username'], session=session)
+                                repetitions=repetitions, username=auth_user['username'], session=session,
+                                request_method=request_method, request_header=request_header, request_body=request_body)
         else:
             return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="wrong Input")
     else:

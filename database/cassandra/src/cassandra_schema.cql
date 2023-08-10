@@ -1,13 +1,12 @@
-DROP KEYSPACE IF EXISTS blockscrape;
 
-CREATE KEYSPACE blockscrape WITH replication = {
+CREATE KEYSPACE IF NOT EXISTS blockscrape WITH replication = {
   'class': 'SimpleStrategy',
   'replication_factor': 3
 };
 
 USE blockscrape;
 
-CREATE TABLE user_data (
+CREATE TABLE IF NOT EXISTS user_data (
   username text PRIMARY KEY,
   first_name text,
   last_name text,
@@ -16,20 +15,18 @@ CREATE TABLE user_data (
   birthdate date
 );
 
-CREATE TABLE order_list (
+CREATE TABLE IF NOT EXISTS order_list (
   uuid uuid PRIMARY KEY,
   creator_username text,
   name text,
   scraping_url text,
+  request_method text,
+  request_header text,
+  request_body text,
   start_timestamp int,
+  next_scrape int,
+  last_updated int,
   repetitions int,
-  intervall int
-);
-
-CREATE TABLE data (
-  uuid uuid PRIMARY KEY,
-  order_uuid uuid,
-  creator_username text,
-  scraping_username text,
-  data text
+  intervall int,
+  finished boolean
 );

@@ -9,12 +9,25 @@ function deleteThisOrder(uuid: string) {
 }
 
 
-export function OpenOrder(value: { uuid: string, name: string, url: string, starting_date: Date, intervall: number, repetitions: number }) {
+export function OpenOrder(value: { uuid: string, name: string, url: string, starting_date: Date, intervall: number, repetitions: number
+                                    request_method: string, request_body: string, request_header: string}) {
     const [opened, {open, close}] = useDisclosure(false);
     return (
         <>
             <Modal opened={opened} onClose={close} title={value.name}>
                 <p style={{wordWrap: "break-word"}}>{value.url}</p>
+                <Flex gap="xs">
+                    <p>Method: </p>
+                    <p>{value.request_method}</p>
+                </Flex>
+                <Flex gap="xs">
+                    <p>Header: </p>
+                    <p>{value.request_header}</p>
+                </Flex>
+                <Flex gap="xs">
+                    <p>Body: </p>
+                    <p>{value.request_body}</p>
+                </Flex>
                 <p>{value.starting_date.toString()}</p>
                 <Flex gap="xs">
                     <p>Repetitions: </p>
