@@ -10,7 +10,6 @@ python = "^3.10"
 schedule = "^1.2.0"
 redis = "^4.6.0"
 cassandra-driver = "^3.28.0"
-docker-py = "^1.10.6"
 
 
 [build-system]

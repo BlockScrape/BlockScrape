@@ -1,13 +1,25 @@
 import time
 import schedule
-
 import redis
-from uuid import uuid4
 from cassandra.cluster import Cluster, Session
 from cassandra.auth import PlainTextAuthProvider
 from cassandra_executor.executor import get_next_data
+import argparse
+
 cassandra_session: Session
 redis_session: redis.client
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--cassandra_uri', default="127.0.0.1")
+parser.add_argument('--cassandra_port', default=9042)
+parser.add_argument('--cassandra_user', default='cassandra')
+parser.add_argument('--cassandra_passwd', default='cassandra')
+parser.add_argument('--redis_uri', default="127.0.0.1")
+parser.add_argument('--redis_port', default=9042)
+args = vars(parser.parse_args())
+
+
 
 
 def connect_cassandra_database(uri: str, port: int, username: str = "cassandra_executor", password: str = "cassandra_executor",):
@@ -21,18 +33,15 @@ def connect_cassandra_database(uri: str, port: int, username: str = "cassandra_e
 def connect_redis_database(uri: str, port: int):
     global redis_session
     redis_session = redis.Redis(host=uri, port=port, decode_responses=True)
-    uuid_data = str(uuid4())
-
-    redis_session.hset(uuid_data, mapping={
-        'url': 'test',
-        'method': 'POST'
-    })
-    print("HI")
-    time.sleep(2)
-    redis2 = redis.Redis(host=uri, port=port, decode_responses=True)
-    print(redis2.hgetall(uuid_data))
 
 
-connect_cassandra_database(uri="localhost", port=9042)
+connect_cassandra_database(uri=str(args['cassandra_uri']), port=int(args['cassandra_port']),
+                           username=str(args['cassandra_user']), password=str(args['cassandra_passwd']))
+connect_redis_database(uri=str(args['redis_uri']), port=int(args['redis_port']))
 
-schedule.every(20).seconds.do(get_next_data, cassandra_session, 20)
+schedule.every(30).seconds.do(get_next_data, cassandra_session, redis_session, 30)
+
+print("Scheduling Service started")
+while True:
+    schedule.run_pending()
+    time.sleep(1)

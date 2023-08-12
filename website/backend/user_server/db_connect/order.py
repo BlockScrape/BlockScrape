@@ -1,21 +1,26 @@
+import time
+from uuid import uuid4, UUID
+
+from cassandra.cluster import Session
 from fastapi import status
 from fastapi.responses import JSONResponse
-from cassandra.cluster import Session
-from uuid import uuid4, UUID
 
 
 def create_order(username: str, name: str, scraping_url, start_timestamp: int, repetitions: int, intervall: int,
                  request_method: str, request_header: str, request_body: str, session: Session):
-    try:
-        session.execute(
-            "INSERT INTO order_list (uuid, creator_username, name, scraping_url, start_timestamp, repetitions, intervall, request_header, request_body, request_method, next_scrape, last_updated, finished)"
-            "VALUES (%(id)s, %(creator_user)s, %(scrape_name)s, %(scrape_url)s, %(timestamp)s, %(repetit)s, %(interv)s, %(r_header)s, %(r_body)s, %(r_method)s), %(timestamp)s, %(timestamp)s, %(finishe)s",
-            {'id': uuid4(), 'creator_user': username, 'scrape_name': name, 'scrape_url': scraping_url,
-             'timestamp': int(start_timestamp / 1000), 'repetit': repetitions, 'interv': intervall,
-             'r_header': request_header, 'r_body': request_body, 'r_method': request_method, 'finishe': False})
-        return JSONResponse(status_code=status.HTTP_201_CREATED, content="Order created")
-    except:
-        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content="Error in Database")
+    # try:
+    session.execute(
+        "INSERT INTO order_list (uuid, creator_username, name, scraping_url, request_method, request_header, request_body, start_timestamp, next_scrape, last_updated, intervall, repetitions, finished)"
+        "VALUES (%(id)s, %(creator_user)s, %(scrape_name)s, %(scrape_url)s, %(r_method)s,%(r_header)s, %(r_body)s, %(timestamp)s, %(timestamp)s, %(current_time)s, %(interv)s, %(repetit)s, %(finishe)s)",
+        {'id': uuid4(), 'creator_user': username, 'scrape_name': name, 'scrape_url': scraping_url,
+         'timestamp': int(start_timestamp / 1000), 'repetit': repetitions, 'interv': intervall,
+         'current_time': int(time.time()), 'r_header': request_header, 'r_body': request_body,
+         'r_method': request_method, 'finishe': False})
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content="Order created")
+
+
+# except:
+#    return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content="Error in Database")
 
 
 def get_orders(username: str, session: Session):
