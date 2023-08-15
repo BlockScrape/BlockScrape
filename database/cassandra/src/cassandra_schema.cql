@@ -30,3 +30,8 @@ CREATE TABLE IF NOT EXISTS order_list (
   intervall int,
   finished boolean
 );
+
+CREATE TABLE IF NOT EXISTS coin_data (
+    username text PRIMARY KEY,
+    coin_value float
+);

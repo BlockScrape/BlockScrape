@@ -11,7 +11,8 @@ const REQUEST_URL = "http://" + window.location.hostname + ":6543",
     ORDER_CREATE = ORDER_URL + '/create',
     ORDER_DELETE = ORDER_URL + '/delete',
     COIN_URL = '/coin',
-    COIN_INFO = COIN_URL + '/info'
+    COIN_INFO = COIN_URL + '/info',
+    COIN_UPDATE = COIN_URL + "/update_coin"
 
 const HTTP_STATUS_OK = 200,
     HTTP_STATUS_CREATED = 201,
@@ -106,6 +107,7 @@ export {
     ORDER_INFO,
     ORDER_DELETE,
     COIN_INFO,
+    COIN_UPDATE,
     HTTP_METHOD_POST,
     HTTP_METHOD_PUT,
     HTTP_STATUS_CREATED,

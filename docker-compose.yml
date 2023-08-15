@@ -13,9 +13,10 @@ services:
       timeout: 10s
       retries: 10
     networks:
-      - website
+      - cassandra
+      - coin
+      - user_backend
       - scheduling
-      - mining
 
   cassandra-load-keyspace:
     container_name: load-keyspace
@@ -33,13 +34,12 @@ services:
         max_attempts: 3
         window: 120s
     networks:
-      - website
-      - scheduling
-      - mining
+      - cassandra
 
   react_ui:
     container_name: react-ui
     build: ./website/frontend/user-interface
+    restart: always
     ports:
       - "99:99"
     depends_on:
@@ -52,6 +52,7 @@ services:
     build: ./website/backend
     ports:
       - "6543:6543"
+    restart: always
     depends_on:
       cassandra:
         condition: service_healthy
@@ -59,17 +60,23 @@ services:
         condition: service_completed_successfully
       auth_service:
         condition: service_started
+      coin_service:
+        condition: service_started
     command:
       - "--authentication_uri=http://auth_service:7979"
       - "--cassandra_uri=cassandra"
       - "--cassandra_port=9042"
       - "--cassandra_user=cassandra"
       - "--cassandra_passwd=cassandra"
+      - "--coinservice_uri=http://coin_service:1337"
     networks:
       - website
+      - coin
+      - user_backend
 
   auth_service:
     build: ./authentitication/server
+    restart: always
     ports:
       - "7979:7979"
     depends_on:
@@ -83,19 +90,22 @@ services:
       - "--cassandra_user=cassandra"
       - "--cassandra_passwd=cassandra"
     networks:
+      - mining_backend
+      - user_backend
+
+  mining_server:
+    build: ./mining/server
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - mining_backend
       - mining
-      - website
-  #mining_server:
-  #  build: ./mining/server
-  #  ports:
-  #    - "80:80"
-  #    - "443:443"
- #   networks:
-   #   - mining
-    #  - scheduling
+      - scheduling
 
   scheduling_service:
     build: ./scheduling
+    restart: always
     command:
       - "--cassandra_uri=cassandra"
       - "--cassandra_port=9042"
@@ -112,13 +122,7 @@ services:
         condition: service_completed_successfully
       scheduling_store:
         condition: service_started
-  #mining_store:
-  #  image: redis:7.0-alpine
-  #  restart: always
-  #  environment:
-  #    - ALLOW_EMPTY_PASSWORD=yes
-  #  ports:
-  #    - '6379:6379'
+
   scheduling_store:
     image: redis:7.0-alpine
     restart: always
@@ -129,10 +133,33 @@ services:
     networks:
       - scheduling
 
+  coin_service:
+    build: ./coin
+    command:
+      - "--cassandra_uri=cassandra"
+      - "--cassandra_port=9042"
+      - "--cassandra_user=cassandra"
+      - "--cassandra_passwd=cassandra"
+    depends_on:
+      cassandra:
+        condition: service_healthy
+      cassandra-load-keyspace:
+        condition: service_completed_successfully
+    networks:
+      - coin
+
 networks:
   website:
     external: true
   scheduling:
-    external: false
+    internal: true
   mining:
     external: true
+  coin:
+    internal: true
+  user_backend:
+    internal: true
+  mining_backend:
+    internal: true
+  cassandra:
+    internal: true

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, Body, status
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer
-from user_server.dependencies.server_information import get_server_con_string
 from user_server.config import create_user, get_user_by_token
 from user_server.dependencies.validate_user import get_current_user
+from user_server.dependencies.server_information import get_auth_server_con_string
 import requests
 import json
 
@@ -24,7 +24,7 @@ async def create(firstname: str = Body(embed=True),
                  passwd: str = Body(embed=True),
                  email: str = Body(embed=True),
                  birthdate: int = Body(embed=True),
-                 server_url: str = Depends(get_server_con_string)):
+                 server_url: str = Depends(get_auth_server_con_string)):
     server_path: str = server_url + create_user
     user_data = {'firstname': firstname, 'lastname': lastname, 'username': username, 'passwd': passwd, 'email': email,
                  'birthdate': birthdate}
