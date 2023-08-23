@@ -10,10 +10,11 @@ from schema import TaskResultSchema, TaskSchema
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--mining_server_url", type=str, default="localhost")
-parser.add_argument("--user", type=str, required=True)
+parser.add_argument("--output_dir", type=str, required=True)
+parser.add_argument("--job_id", type=str, required=True)
 parsed_args = parser.parse_args()
 mining_server_url: str = parsed_args.mining_server_url
-user_id: str = parsed_args.user
+output_dir: str = parsed_args.output_dir
 
 sio = socketio.AsyncClient()
 sio.connect(mining_server_url)
@@ -21,32 +22,11 @@ sio.connect(mining_server_url)
 
 @sio.event
 async def connect():
-    sio.emit("set_user", user_id)
+    sio.emit("set_job", parsed_args.job_id)
 
 
-@sio.on("task_bundle")
-async def compute_task_bundle(data: List[TaskSchema]):
-    task_results: List[TaskSchema] = asyncio.gather(*[scrape(task) for task in data])
-    json_encoded = JSONEncoder().encode([task_result.model_dump_json() for task_result in task_results])
-    sio.emit("task_results", task_results)
-
-
-async def scrape(task: TaskSchema) -> Coroutine[TaskResultSchema]:
-    async with httpx.AsyncClient() as client:
-        res: httpx.Response = await client.request(method=task.method.value,
-                                                   url=task.url,
-                                                   params=task.params,
-                                                   headers=task.headers,
-                                                   content=task.content,
-                                                   data=task.data,
-                                                   files=task.files,
-                                                   json=task.json_data,
-                                                   cookies=task.cookies,
-                                                   )
-        return TaskResultSchema(task_id=task.id,
-                                headers=res.headers,
-                                content=res.content,
-                                encoding=res.encoding,
-                                status=res.status_code,
-                                elapsed=res.elapsed,
-                                )
+@sio.on("task_result")
+async def compute_task_bundle(data:TaskResultSchema):
+    # write result to file
+    with open(f"{output_dir}/{str(data.time)}", "w") as f:
+        f.write(JSONEncoder().encode(data.model_dump_json()))

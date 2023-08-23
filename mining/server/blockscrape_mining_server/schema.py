@@ -22,16 +22,16 @@ class TaskSchema(BaseModel):
     headers: str
     content: bytes
     creator_user: str
-    validated: bool = False
-    pending_users: List[Tuple[str, int]]
-    finished_users: List[Tuple[str, int]]
+    job_id: str
 
 
 class TaskResultSchema(BaseModel):
     task_result_id: str
     task_id: str
+    job_id: str
     headers: str
     content: bytes
     encoding: str
     status: int
+    time: timedelta
     elapsed: timedelta

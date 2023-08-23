@@ -1,7 +1,8 @@
 import time
+from json import JSONEncoder
+
 import redis
 from cassandra.cluster import Session
-from uuid import uuid4
 
 
 def get_next_data(session: Session, redis_session: redis.client, schedule_time: int):
@@ -27,12 +28,11 @@ def get_next_data(session: Session, redis_session: redis.client, schedule_time: 
                                            'timing_next': next_scrape_time,
                                            'current_time': temp_time,
                                            'ident': row.uuid})
-        temp_id = str(uuid4())
-        redis_session.hset(temp_id, mapping={
-            'id': str(row.uuid),
-            'method': row.request_method,
-            'url': row.scraping_url,
-            'headers': row.request_header,
-            'content': row.request_body,
-            'creator_user': row.creator_username
-        })
+        redis_session.lpush('tasks',
+                            JSONEncoder().encode({'id': str(row.uuid),
+                                                  'method': row.request_method,
+                                                  'url': row.scraping_url,
+                                                  'headers': row.request_header,
+                                                  'content': row.request_body,
+                                                  'creator_user': row.creator_username
+                                                  }))

@@ -19,25 +19,19 @@ class TaskSchema(BaseModel):
     id: str
     method: RequestMethod
     url: str
-    params: str | dict
     headers: str
     content: bytes
-    data: dict
-    files: dict
-    json_data: str
-    headers: dict
-    cookies: dict
-
-    validated: bool = False
-    pending_users: List[Tuple[str, int]]
-    finished_users: List[Tuple[str, int]]
+    creator_user: str
+    job_id: str
 
 
 class TaskResultSchema(BaseModel):
     task_result_id: str
     task_id: str
+    job_id: str
     headers: str
     content: bytes
     encoding: str
     status: int
+    time: timedelta
     elapsed: timedelta

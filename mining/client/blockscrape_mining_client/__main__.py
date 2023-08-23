@@ -35,13 +35,8 @@ async def scrape(task: TaskSchema) -> Coroutine[TaskResultSchema]:
     async with httpx.AsyncClient() as client:
         res: httpx.Response = await client.request(method=task.method.value,
                                                    url=task.url,
-                                                   params=task.params,
                                                    headers=task.headers,
                                                    content=task.content,
-                                                   data=task.data,
-                                                   files=task.files,
-                                                   json=task.json_data,
-                                                   cookies=task.cookies,
                                                    )
         return TaskResultSchema(task_id=task.id,
                                 headers=res.headers,
