@@ -1,4 +1,5 @@
 import argparse
+import asyncio
 from json import JSONEncoder
 import socketio
 
@@ -13,12 +14,12 @@ mining_server_url: str = parsed_args.mining_server_url
 output_dir: str = parsed_args.output_dir
 
 sio = socketio.AsyncClient()
-sio.connect(mining_server_url)
+asyncio.run(sio.connect(mining_server_url))
 
 
 @sio.event
 async def connect():
-    sio.emit("set_job", parsed_args.job_id)
+    await sio.emit("set_job", parsed_args.job_id)
 
 
 @sio.on("task_result")

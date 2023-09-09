@@ -105,7 +105,7 @@ services:
   result_server:
     build: ./result/server
     ports:
-      - "8001:8000"
+      - "8000:8000"
     networks:
       - mining_backend
       - mining
