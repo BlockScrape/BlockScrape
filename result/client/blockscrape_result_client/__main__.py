@@ -1,12 +1,8 @@
 import argparse
-import asyncio
-from json import JSONDecoder, JSONEncoder
-from typing import List, Coroutine
-
-import httpx
+from json import JSONEncoder
 import socketio
 
-from schema import TaskResultSchema, TaskSchema
+from schema import TaskResultSchema
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--mining_server_url", type=str, default="localhost")

@@ -96,7 +96,7 @@ services:
   mining_server:
     build: ./mining/server
     ports:
-      - "8000:8000"
+      - "8001:8001"
     networks:
       - mining_backend
       - mining

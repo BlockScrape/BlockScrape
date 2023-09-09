@@ -76,7 +76,7 @@ async def task_result(sid, data):
                                              )
     # write results to redis
     await sio.emit("task_bundle", await get_new_task_bundle(10), room=sid)
-    [await red_pubsub.publish(result.job_id, result) for result in processed_results]
+    [await red.publish(result.job_id, result) for result in processed_results]
 
 
 @sio.event
