@@ -1,8 +1,30 @@
 import time
+import uuid
 from json import JSONEncoder
-
+from pydantic import BaseModel
 import redis
 from cassandra.cluster import Session
+from enum import Enum
+
+
+class RequestMethod(Enum):
+    get = "GET"
+    options = "OPTIONS"
+    head = "HEAD"
+    post = "POST"
+    put = "PUT"
+    patch = "PATCH"
+    delete = "DELETE"
+
+
+class TaskSchema(BaseModel):
+    id: str
+    method: RequestMethod
+    url: str
+    headers: str
+    content: bytes
+    creator_user: str
+    job_id: str
 
 
 def get_next_data(session: Session, redis_session: redis.client, schedule_time: int):
@@ -29,10 +51,8 @@ def get_next_data(session: Session, redis_session: redis.client, schedule_time: 
                                            'current_time': temp_time,
                                            'ident': row.uuid})
         redis_session.lpush('tasks',
-                            JSONEncoder().encode({'id': str(row.uuid),
-                                                  'method': row.request_method,
-                                                  'url': row.scraping_url,
-                                                  'headers': row.request_header,
-                                                  'content': row.request_body,
-                                                  'creator_user': row.creator_username
-                                                  }))
+                            TaskSchema(id=str(uuid.uuid4()), method=row.request_method, url=row.scraping_url,
+                                       headers=row.request_header, content=bytes(row.request_body, 'utf-8'),
+                                       creator_user=row.creator_username, job_id=str(row.uuid)).model_dump_json()
+                            )
+

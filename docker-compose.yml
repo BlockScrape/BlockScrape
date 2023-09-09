@@ -96,11 +96,14 @@ services:
   mining_server:
     build: ./mining/server
     ports:
-      - "8001:8001"
+      - "8001:8000"
     networks:
       - mining_backend
       - mining
       - scheduling
+    command:
+      - "--redis_uri=scheduling_store"
+      - "--redis_port=6379"
 
   result_server:
     build: ./result/server
@@ -159,7 +162,6 @@ networks:
   website:
     external: true
   scheduling:
-    internal: true
   mining:
     external: true
   coin:

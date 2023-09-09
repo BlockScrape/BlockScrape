@@ -33,7 +33,7 @@ def compute_task_bundle(data: List[TaskSchema]):
 
 
 def scrape(task: TaskSchema):
-    async with httpx.AsyncClient() as client:
+    with httpx.AsyncClient() as client:
         res: httpx.Response = asyncio.run(client.request(method=task.method.value,
                                                          url=task.url,
                                                          headers=task.headers,

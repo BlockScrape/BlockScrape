@@ -39,7 +39,7 @@ connect_cassandra_database(uri=str(args['cassandra_uri']), port=int(args['cassan
                            username=str(args['cassandra_user']), password=str(args['cassandra_passwd']))
 connect_redis_database(uri=str(args['redis_uri']), port=int(args['redis_port']))
 
-schedule.every(30).seconds.do(get_next_data, cassandra_session, redis_session, 30)
+schedule.every(10).seconds.do(get_next_data, cassandra_session, redis_session, 10)
 
 print("Scheduling Service started")
 while True:

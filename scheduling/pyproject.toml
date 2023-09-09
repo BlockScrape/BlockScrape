@@ -10,6 +10,7 @@ python = "^3.10"
 schedule = "^1.2.0"
 redis = "^4.6.0"
 cassandra-driver = "^3.28.0"
+pydantic = "^2.3.0"
 
 
 [build-system]
