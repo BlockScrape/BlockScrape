@@ -96,12 +96,19 @@ services:
   mining_server:
     build: ./mining/server
     ports:
-      - "80:80"
-      - "443:443"
+      - "8000:8000"
     networks:
       - mining_backend
       - mining
       - scheduling
+
+  result_server:
+    build: ./result/server
+    ports:
+      - "8000:8000"
+    networks:
+      - mining_backend
+      - mining
 
   scheduling_service:
     build: ./scheduling

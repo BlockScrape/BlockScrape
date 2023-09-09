@@ -11,6 +11,7 @@ python = "^3.10"
 redis = {extras = ["hiredis"], version = "^4.6.0"}
 python-socketio = "^5.8.0"
 pydantic = "^2.0.3"
+uvicorn = "^0.23.2"
 
 
 [tool.poetry.group.dev.dependencies]

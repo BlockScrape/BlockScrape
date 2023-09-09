@@ -4,6 +4,7 @@ import time
 from json import JSONDecoder
 from typing import List, Coroutine
 
+import uvicorn
 import redis.asyncio as redis
 import socketio as socketio
 
@@ -16,6 +17,7 @@ args = vars(parser.parse_args())
 
 conn_pool = redis.ConnectionPool(host=args["redis_uri"], port=args["redis_port"], db=0)
 red = redis.Redis(connection_pool=conn_pool)
+red_pubsub = red.pubsub()
 user_map = {}  # key: socket id, value: user id
 
 
@@ -41,7 +43,7 @@ async def get_new_task_bundle(user_id, nr_of_tasks: int = 10) -> Coroutine[List[
 
 
 async def _process_task_result(task_result: TaskResultSchema, user_id: str):
-    pass
+    return task_result
 
 
 sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins='*')
@@ -74,7 +76,7 @@ async def task_result(sid, data):
                                              )
     # write results to redis
     await sio.emit("task_bundle", await get_new_task_bundle(10), room=sid)
-    [await red.publish(result.job_id, result) for result in processed_results]
+    [await red_pubsub.publish(result.job_id, result) for result in processed_results]
 
 
 @sio.event("disconnect")
@@ -82,3 +84,7 @@ async def disconnect(sid):
     print("disconnect ", sid)
     # remove sid from user map, clear pending tasks
     del user_map[sid]
+
+
+app = socketio.ASGIApp(sio)
+uvicorn.run(app)
