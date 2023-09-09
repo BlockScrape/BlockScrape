@@ -63,7 +63,7 @@ class Server(uvicorn.Server):
             thread.join()
 
 
-config = uvicorn.Config("block_scrape_result_server.__main__:app")
+config = uvicorn.Config("blockscrape_result_server.__main__:app", log_level="info")
 server = Server(config=config)
 
 try:
