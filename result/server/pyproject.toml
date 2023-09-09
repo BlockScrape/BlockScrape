@@ -8,10 +8,10 @@ packages = [{include = "blockscrape_result_server"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-uvicorn = "^0.23.2"
 redis = {extras = ["hiredis"], version = "^4.6.0"}
 python-socketio = "^5.9.0"
 pydantic = "^2.3.0"
+uvicorn = {extras = ["standard"], version = "^0.23.2"}
 
 [tool.poetry.group.dev.dependencies]
 setuptools = "^68.0.0"
