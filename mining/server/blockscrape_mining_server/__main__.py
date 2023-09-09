@@ -31,7 +31,6 @@ async def get_new_task_bundle(user_id, nr_of_tasks: int = 10):
     tasks = await asyncio.gather(*
                                  [red.brpop("tasks") for i in range(nr_of_tasks)]
                                  )
-    yield tasks
     deserialized_tasks = [TaskSchema.model_validate(task) for task in tasks]
 
     # add dispatching information
@@ -39,7 +38,7 @@ async def get_new_task_bundle(user_id, nr_of_tasks: int = 10):
 
     await red.lpush("pending_tasks", *edited_tasks)
 
-    return
+    return tasks
 
 
 async def _process_task_result(task_result: TaskResultSchema, user_id: str):
@@ -61,7 +60,7 @@ async def set_user(sid, user_id):
     print("set user", user_id)
 
     # send first task bundle
-    await sio.emit("task_bundle", get_new_task_bundle(10), room=sid)
+    await sio.emit("task_bundle", await get_new_task_bundle(10), room=sid)
 
 
 @sio.on("task_results")
