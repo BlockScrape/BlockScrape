@@ -1,8 +1,8 @@
 import argparse
 import asyncio
-import contextlib
 import threading
 import time
+
 import redis.asyncio as redis
 import socketio as socketio
 import uvicorn
@@ -46,39 +46,27 @@ async def disconnect(sid):
 app = socketio.ASGIApp(sio)
 
 
-class Server(uvicorn.Server):
-    def install_signal_handlers(self):
-        pass
-
-    @contextlib.contextmanager
-    def run_in_thread(self):
-        thread = threading.Thread(target=self.run)
-        thread.start()
-        try:
-            while not self.started:
-                time.sleep(1e-3)
-            yield
-        finally:
-            self.should_exit = True
-            thread.join()
+def run(self):
+    config = uvicorn.Config("block_scrape_result_server.__main__:app", host="0.0.0.0",
+                            log_level="info")
+    server = uvicorn.Server(config=config)
+    server.run()
 
 
-config = uvicorn.Config("block_scrape_result_server.__main__:app")
-server = Server(config=config)
-
+thread = None
 try:
-    with server.run_in_thread():
-        while True:
-            message = asyncio.run(red_pubsub.get_message())
-            if message:
-                sio.emit("task_result", message["data"], room=job_map_rlt[message["channel"]])
-            else:
-                time.sleep(1)
+    thread = threading.Thread(target=run)
+    thread.start()
+    while True:
+        message = asyncio.run(red_pubsub.get_message())
+        if message:
+            sio.emit("task_result", message["data"], room=job_map_rlt[message["channel"]])
+        else:
+            time.sleep(1)
 except KeyboardInterrupt:
     pass
 finally:
     red_pubsub.unsubscribe()
     red_pubsub.close()
     red.close()
-    sio.stop()
-    sio.disconnect()
+    thread.join()
