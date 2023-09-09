@@ -58,6 +58,7 @@ async def connect(sid, environ):
 async def set_user(sid, user_id):
     # add to user map if not already there
     user_map[sid] = user_id
+    print("set user", user_id)
 
     # send first task bundle
     await sio.emit("task_bundle", await get_new_task_bundle(10), room=sid)
@@ -70,6 +71,7 @@ async def task_result(sid, data):
     :param data: json_data encoded list of json_data encoded TaskResultSchema
     :return:
     """
+    print("task_results", data)
     task_results = [TaskResultSchema.model_validate(x) for x in JSONDecoder().decode(data)]
     processed_results = await asyncio.gather(*
                                              [_process_task_result(x, user_map[sid]) for x in task_results]
@@ -87,4 +89,4 @@ async def disconnect(sid):
 
 
 app = socketio.ASGIApp(sio)
-uvicorn.run(app)
+uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
