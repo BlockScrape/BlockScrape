@@ -61,7 +61,7 @@ async def set_user(sid, user_id):
     print("set user", user_id)
 
     # send first task bundle
-    await sio.emit("task_bundle", await get_new_task_bundle(10), room=sid)
+    await sio.emit("task_bundle", get_new_task_bundle(10), room=sid)
 
 
 @sio.on("task_results")
