@@ -26,7 +26,7 @@ async def connect(sid, environ):
     print("connect ", sid)
 
 
-@sio.event
+@sio.on("set_user")
 async def set_user(sid, job_id):
     # add to user map if not already there
     job_map[sid] = job_id
@@ -34,7 +34,7 @@ async def set_user(sid, job_id):
     await red_pubsub.subscribe(job_id)
 
 
-@sio.event("disconnect")
+@sio.event
 async def disconnect(sid):
     print("disconnect ", sid)
     # remove sid from user map, clear pending tasks
