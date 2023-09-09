@@ -20,6 +20,7 @@ sio = socketio.AsyncClient(logger=True, engineio_logger=True)
 @sio.event
 async def connect():
     await sio.emit("set_job", parsed_args.job_id)
+    print("set job_id to: ", parsed_args.job_id)
 
 
 @sio.on("task_result")
@@ -31,4 +32,8 @@ async def compute_task_bundle(data: TaskResultSchema):
 
 if __name__ == "__main__":
     asyncio.run(sio.connect(mining_server_url))
-    asyncio.run(sio.wait())
+    try:
+        while True:
+            asyncio.run(sio.wait())
+    except KeyboardInterrupt:
+        print("exiting")
