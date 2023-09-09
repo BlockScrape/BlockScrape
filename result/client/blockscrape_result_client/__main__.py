@@ -7,7 +7,7 @@ import socketio
 from schema import TaskResultSchema
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--mining_server_url", type=str, default="localhost")
+parser.add_argument("--result_server_url", type=str, default="localhost")
 parser.add_argument("--output_dir", type=str, required=True)
 parser.add_argument("--job_id", type=str, required=True)
 parsed_args = parser.parse_args()
@@ -26,6 +26,8 @@ def connect():
 @sio.on("task_result")
 def compute_task_bundle(data: TaskResultSchema):
     # write result to file
+    print("got result: ")
+    print(data)
     with open(f"{output_dir}/{str(data.time)}", "w") as f:
         f.write(JSONEncoder().encode(data.model_dump_json()))
 

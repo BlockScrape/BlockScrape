@@ -8,10 +8,9 @@ packages = [{include = "blockscrape_mining_client"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-python-socketio = "^5.8.0"
 httpx = "^0.24.1"
-socketio = {extras = ["asyncclient"], version = "^0.2.1"}
 pydantic = "^2.1.1"
+python-socketio = {extras = ["client"], version = "^5.9.0"}
 
 
 [tool.poetry.group.dev.dependencies]
