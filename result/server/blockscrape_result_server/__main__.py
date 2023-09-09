@@ -38,9 +38,12 @@ async def set_user(sid, job_id):
 async def disconnect(sid):
     print("disconnect ", sid)
     # remove sid from user map, clear pending tasks
-    job_id = job_map[sid]
-    del job_map[sid]
-    del job_map_rlt[job_id]
+    if sid in job_map.keys():
+        job_id = job_map[sid]
+        del job_map[sid]
+        del job_map_rlt[job_id]
+    else:
+        print("sid not in job_map:", sid)
 
 
 app = socketio.ASGIApp(sio)
