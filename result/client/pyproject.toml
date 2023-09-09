@@ -8,6 +8,8 @@ packages = [{include = "blockscrape_result_client"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+python-socketio = "^5.9.0"
+pydantic = "^2.3.0"
 
 
 [tool.poetry.group.dev.dependencies]
