@@ -26,7 +26,7 @@ def _add_dispatching_information(task: TaskSchema, user_id: str):
     return task
 
 
-async def get_new_task_bundle(user_id, nr_of_tasks: int = 10) -> Coroutine[List[TaskSchema]]:
+async def get_new_task_bundle(user_id, nr_of_tasks: int = 10):
     # TODO get from pending tasks first
     tasks = await asyncio.gather(*
                                  [red.brpop("tasks") for i in range(nr_of_tasks)]
@@ -49,12 +49,12 @@ async def _process_task_result(task_result: TaskResultSchema, user_id: str):
 sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins='*')
 
 
-@sio.event("connect")
+@sio.event
 async def connect(sid, environ):
     print("connect ", sid)
 
 
-@sio.event("set_user")
+@sio.on("set_user")
 async def set_user(sid, user_id):
     # add to user map if not already there
     user_map[sid] = user_id
@@ -63,7 +63,7 @@ async def set_user(sid, user_id):
     await sio.emit("task_bundle", await get_new_task_bundle(10), room=sid)
 
 
-@sio.event("task_results")
+@sio.on("task_results")
 async def task_result(sid, data):
     """
     :param sid: socket id
@@ -79,7 +79,7 @@ async def task_result(sid, data):
     [await red_pubsub.publish(result.job_id, result) for result in processed_results]
 
 
-@sio.event("disconnect")
+@sio.event
 async def disconnect(sid):
     print("disconnect ", sid)
     # remove sid from user map, clear pending tasks

@@ -34,7 +34,7 @@ COPY --from=dependency_loader /app/libraries /app/libraries
 ENV PYTHONPATH "${PYTHONPATH}:/app:/app/libraries"
 
 ENV PYTHONPATH="${PYTHONPATH}:/app"
-COPY blockscrape_result_server blockscrape_mining_server
+COPY blockscrape_result_server blockscrape_result_server
 
 EXPOSE 8000
 # HEALTHCHECK --start-period=30s CMD python -c "import requests; requests.get('http://localhost:8000', timeout=2)"
