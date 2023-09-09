@@ -25,9 +25,11 @@ def connect():
 
 @sio.on("task_bundle")
 def compute_task_bundle(data: List[TaskSchema]):
+    print("task_bundle", data)
     task_results: List[TaskResultSchema] = [scrape(task) for task in data]
     json_encoded = JSONEncoder().encode([task_result.model_dump_json() for task_result in task_results])
-    sio.emit("task_results", task_results)
+    sio.emit("task_results", json_encoded)
+    print("task_results", json_encoded)
 
 
 def scrape(task: TaskSchema):
