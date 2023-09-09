@@ -53,18 +53,22 @@ def run():
     server.run()
 
 
-thread = None
-try:
-    thread = threading.Thread(target=run)
-    thread.start()
-    while True:
-        message = asyncio.run(red_pubsub.get_message())
-        if message:
-            sio.emit("task_result", message["data"], room=job_map_rlt[message["channel"]])
-        else:
-            time.sleep(1)
-except KeyboardInterrupt:
-    pass
-finally:
-    asyncio.run(red.close())
-    thread.join()
+async def main():
+    thread = None
+    try:
+        thread = threading.Thread(target=run)
+        thread.start()
+        while True:
+            message = await red_pubsub.get_message()
+            if message:
+                await sio.emit("task_result", message["data"], room=job_map_rlt[message["channel"]])
+            else:
+                time.sleep(1)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        await red.close()
+        thread.join()
+
+
+asyncio.run(main())
