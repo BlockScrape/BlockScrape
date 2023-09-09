@@ -1,8 +1,8 @@
 import argparse
 import asyncio
+import time
 from json import JSONDecoder, JSONEncoder
 from typing import List, Coroutine
-
 import httpx
 import socketio
 
@@ -26,7 +26,7 @@ def connect():
 @sio.on("task_bundle")
 def compute_task_bundle(data: List[TaskSchema]):
     print("task_bundle", data)
-    task_results: List[TaskResultSchema] = [scrape(task) for task in data]
+    task_results: List[TaskResultSchema] = [scrape(TaskSchema.model_validate(task)) for task in data]
     json_encoded = JSONEncoder().encode([task_result.model_dump_json() for task_result in task_results])
     sio.emit("task_results", json_encoded)
     print("task_results", json_encoded)
@@ -36,11 +36,13 @@ def scrape(task: TaskSchema):
     with httpx.Client() as client:
         res: httpx.Response = client.request(method=task.method.value,
                                                          url=task.url,
-                                                         #headers=task.headers, TODO
+                                                         headers=task.headers,
                                                          content=task.content,
                                                          )
         return TaskResultSchema(task_id=task.id,
-                                headers=res.headers,
+                                job_id=task.job_id,
+                                headers=str(res.headers),
+                                time=int(time.time()),
                                 content=res.content,
                                 encoding=res.encoding,
                                 status=res.status_code,

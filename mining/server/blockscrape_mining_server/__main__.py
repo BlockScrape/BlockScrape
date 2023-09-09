@@ -36,12 +36,12 @@ async def get_new_task_bundle(user_id, nr_of_tasks: int = 10):
     print("test")
     print(type(tasks))
     print(tasks)
-    deserialized_tasks = [TaskSchema.model_validate(task) for task in tasks]
+    #deserialized_tasks = [TaskSchema.model_validate(task) for task in tasks]
 
     # add dispatching information
-    edited_tasks = [_add_dispatching_information(task, user_id) for task in deserialized_tasks]
+    #edited_tasks = [_add_dispatching_information(task, user_id) for task in deserialized_tasks]
 
-    await red.lpush("pending_tasks", *edited_tasks)
+    #await red.lpush("pending_tasks", *edited_tasks)
 
     print("returning tasks", tasks)
     return tasks
