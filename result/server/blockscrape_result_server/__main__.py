@@ -47,7 +47,7 @@ app = socketio.ASGIApp(sio)
 
 
 def run():
-    config = uvicorn.Config("block_scrape_result_server.__main__:app", host="0.0.0.0",
+    config = uvicorn.Config("blockscrape_result_server.__main__:app", host="0.0.0.0",
                             log_level="info")
     server = uvicorn.Server(config=config)
     server.run()
@@ -66,6 +66,5 @@ try:
 except KeyboardInterrupt:
     pass
 finally:
-    red_pubsub.close()
-    red.close()
+    asyncio.run(red.close())
     thread.join()
