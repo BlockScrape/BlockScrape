@@ -28,6 +28,7 @@ def _add_dispatching_information(task: TaskSchema, user_id: str):
 
 async def get_new_task_bundle(user_id, nr_of_tasks: int = 10):
     # TODO get from pending tasks first
+    print("get_new_task_bundle")
     tasks = await asyncio.gather(*
                                  [red.brpop("tasks") for i in range(nr_of_tasks)]
                                  )
@@ -38,6 +39,7 @@ async def get_new_task_bundle(user_id, nr_of_tasks: int = 10):
 
     await red.lpush("pending_tasks", *edited_tasks)
 
+    print("returning tasks", tasks)
     return tasks
 
 
@@ -61,6 +63,7 @@ async def set_user(sid, user_id):
 
     # send first task bundle
     await sio.emit("task_bundle", await get_new_task_bundle(10), room=sid)
+    print("sent task bundle")
 
 
 @sio.on("task_results")
@@ -78,6 +81,7 @@ async def task_result(sid, data):
     # write results to redis
     await sio.emit("task_bundle", await get_new_task_bundle(10), room=sid)
     [await red.publish(result.job_id, result) for result in processed_results]
+    print("published results")
 
 
 @sio.event
