@@ -47,6 +47,10 @@ async def create(name: str = Body(embed=True),
         return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content="Could not validate Credentials")
 
 
+
+
+
+
 @router.delete("/delete")
 async def delete(uuid: str = Body(embed=True),
                  auth_user=Depends(get_current_user),

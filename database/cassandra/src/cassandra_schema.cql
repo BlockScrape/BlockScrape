@@ -12,7 +12,9 @@ CREATE TABLE IF NOT EXISTS user_data (
   last_name text,
   email text,
   passwd text,
-  birthdate date
+birthdate date,
+  otp_secret text,
+  otp_verified boolean
 );
 
 CREATE TABLE IF NOT EXISTS order_list (

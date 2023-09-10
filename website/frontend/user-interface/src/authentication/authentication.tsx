@@ -9,17 +9,23 @@ import {
     Group,
     Button,
     ActionIcon,
-    useMantineColorScheme
+    useMantineColorScheme, Modal
 } from '@mantine/core';
 import {Link} from 'react-router-dom';
 import {login} from "./user";
 import {useForm} from '@mantine/form';
-import React from 'react';
+import React, {useState} from 'react';
 import {Notifications} from "@mantine/notifications";
 import {IconSun, IconMoonStars} from '@tabler/icons-react';
+import {useDisclosure} from "@mantine/hooks";
+import VerifyMFA from "./mfa/verify";
+import DoMfa from "./mfa/doMfa";
+
 
 export function AuthenticationForm() {
-    const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+    const {colorScheme, toggleColorScheme} = useMantineColorScheme();
+    const [mfaData, setMfaData] = useState((<Text>Loading...</Text>));
+    const [opened, {open, close}] = useDisclosure(false);
     const dark = colorScheme === 'dark';
     const form = useForm({
         initialValues: {
@@ -28,8 +34,25 @@ export function AuthenticationForm() {
         },
     });
 
-    const handleSubmit = (value: ReturnType<(values: { password: string; username: string }) => { password: string; username: string }>) => {
+    const handleSubmit = (value: ReturnType<(values: { password: string; username: string }) => {
+        password: string;
+        username: string
+    }>) => {
+        setMfaData((<Text>Loading...</Text>))
         login(value.username, value.password)
+            .then((data) => {
+                if (data) {
+                    if (data.otp_verified === true) {
+                        setMfaData(<DoMfa username={value.username} password={value.password}/>)
+                    } else {
+                        setMfaData(<VerifyMFA username={value.username} google_otp_auth={data.otp_google_auth}
+                                              otp_secret={data.otp_key} close={close}/>)
+                    }
+                }
+            })
+            .then(
+                open
+            )
 
     };
 
@@ -73,7 +96,9 @@ export function AuthenticationForm() {
                         </Group>
                     </form>
                 </Paper>
-
+                <Modal opened={opened} onClose={close} title="MFA Login">
+                    {mfaData}
+                </Modal>
             </Container>
             <Notifications/>
         </>

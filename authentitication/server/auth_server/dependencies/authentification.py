@@ -9,9 +9,9 @@ from starlette import status
 from auth_server.dependencies.db_connector import get_database_session
 from auth_server.schemas.authentification import TokenData
 from auth_server.db_connect.user import get_user
+import pyotp as otp
 
-# to get a string like this run:
-# openssl rand -hex 32
+
 SECRET_KEY = "7e9e6bebb353971f53da617a44c9ac2a26b1f3e072ba532ad98ac75d7c557104"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 600
@@ -45,11 +45,27 @@ def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def authenticate_user(username: str, plain_password: str, session: Session):
+def verify_mfa(mfa_key: str, otp_secret: str):
+    mfa_checker = otp.TOTP(otp_secret)
+    return mfa_checker.verify(mfa_key)
+
+
+def check_user(username: str, plain_password: str, session: Session):
     user = get_user(username, session)
     if not user:
         return False
     if not verify_password(plain_password, user['passwd']):
+        return False
+    return user
+
+
+def authenticate_user(username: str, plain_password: str, mfa_key: str, session: Session):
+    user = get_user(username, session)
+    if not user:
+        return False
+    if not verify_password(plain_password, user['passwd']):
+        return False
+    if not verify_mfa(mfa_key, user['otp_secret']):
         return False
     return user
 

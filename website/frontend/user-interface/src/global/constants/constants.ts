@@ -2,7 +2,9 @@ import Cookies from "universal-cookie";
 
 const REQUEST_URL = "http://" + window.location.hostname + ":6543",
     USER_URL = '/user',
-    LOGIN_TOKEN = '/token',
+    LOGIN_TOKEN = '/check_credentials',
+    LOGIN_TOKEN_MFA = "/token",
+    VERIFY_MFA = USER_URL + "/initial_otp_verify",
     TOKEN_EXPIRE_HOURS = 10,
     USER_CREATE_URL = USER_URL + '/create',
     USER_INFO = USER_URL + '/me',
@@ -102,6 +104,8 @@ function doUtcDate(date: Date) {
 export {
     REQUEST_URL,
     LOGIN_TOKEN,
+    LOGIN_TOKEN_MFA,
+    VERIFY_MFA,
     USER_CREATE_URL,
     ORDER_CREATE,
     ORDER_INFO,
