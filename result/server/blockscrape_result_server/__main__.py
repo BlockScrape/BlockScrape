@@ -60,39 +60,50 @@ async def main():
         thread = threading.Thread(target=run, args=(job_sid_queue,))
         thread.start()
         print("Jegger ist ein Andy")
-        await red_pubsub.psubscribe("*")
         proxy_sio = socketio.AsyncServer(client_manager=AsyncRedisManager(
             f"redis://{args['redis_uri']}:{args['redis_port']}/{args['socketio_db_number']}",
             write_only=True))
         while True:
             print("Jegger ist ein noch größerer Andy")
             for i in range(job_sid_queue.qsize()):
+                print("hi")
                 action, sid, job_id = job_sid_queue.get()
+                print("hi2")
+                print(action)
                 if action == "a":
                     job_map[sid] = job_id
                     job_map_rlt[job_id] = sid
                     print("set_job ")
                     print(job_map_rlt)
                     print(job_id)
+                    await red_pubsub.subscribe(job_id)
                 elif action == "d":
                     if sid in job_map.keys():
+                        print("job removing started")
+                        await red_pubsub.unsubscribe(job_id)
+                        print("job removed middle test")
                         job_id = job_map[sid]
                         del job_map[sid]
                         del job_map_rlt[job_id]
+                        print("job removed")
                     else:
                         print("sid not in job_map:", sid)
-            message = await red_pubsub.get_message(timeout=8.0)
-            print("message")
-            print(message)
-            if message:
-                print("emit task_result")
-                print(message["channel"])
-                print(job_map_rlt.keys())
-                if message["channel"] in job_map_rlt.keys():
-                    print("hallo test")
-                    await proxy_sio.emit("task_result", message["data"], room=job_map_rlt[message["channel"]])
-                    print("hallo test test test")
-                print("hallo 123")
+            if len(job_map.keys()) > 0:
+                print("hilfe ich bin dumm")
+                message = await red_pubsub.get_message(timeout=8.0)
+                print("message")
+                print(message)
+                if message and message["type"] == "message":
+                    print("emit task_result")
+                    print(message["channel"].decode('utf-8'))
+                    print(job_map_rlt.keys())
+                    if message["channel"].decode('utf-8') in job_map_rlt.keys():
+                        print("hallo test")
+                        await proxy_sio.emit("task_result", message["data"], room=job_map_rlt[message["channel"].decode('utf-8')])
+                        print("hallo test test test")
+                    print("hallo 123")
+                else:
+                    time.sleep(1)
             else:
                 time.sleep(1)
     except KeyboardInterrupt:

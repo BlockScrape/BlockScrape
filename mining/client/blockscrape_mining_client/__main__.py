@@ -39,7 +39,8 @@ def scrape(task: TaskSchema):
                                                          url=task.url,
                                                          headers=task.headers,
                                                          content=task.content,
-                                                         )
+                                             timeout=5.0
+                                                             )
         return TaskResultSchema(task_id=task.id,
                                 task_result_id=str(uuid.uuid4()),
                                 job_id=task.job_id,

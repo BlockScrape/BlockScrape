@@ -28,11 +28,12 @@ def compute_task_bundle(data):
     # write result to file
     print("got result: ")
     print(data)
-    parsed_data = JSONDecoder().decode(data)
-    parsed_data = [TaskResultSchema.model_validate(task_res) for task_res in parsed_data]
-    for task_res in parsed_data:
-        with open(f"{output_dir}/{str(task_res.time)}", "w") as f:
-            f.write(task_res.model_dump_json())
+    parsed_data = JSONDecoder().decode(data.decode('utf-8'))
+    print(parsed_data)
+    parsed_data = TaskResultSchema.model_validate(parsed_data)
+    print(parsed_data)
+    with open(f"{output_dir}/{str(parsed_data.time)}", "w") as f:
+        f.write(parsed_data.model_dump_json())
 
 
 if __name__ == "__main__":

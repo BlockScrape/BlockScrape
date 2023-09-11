@@ -51,7 +51,8 @@ async def _process_task_result(task_result: TaskResultSchema, user_id: str):
     return task_result
 
 
-sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins='*')
+sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins='*',
+        ping_timeout=30)
 
 
 @sio.event
