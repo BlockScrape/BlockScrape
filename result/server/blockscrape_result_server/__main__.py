@@ -1,5 +1,6 @@
 import argparse
 import asyncio
+import queue
 import threading
 import time
 
@@ -20,43 +21,36 @@ red = redis.Redis(connection_pool=conn_pool)
 
 job_map = {}  # key: socket id, value: user id
 job_map_rlt = {}
-sio = socketio.AsyncServer(client_manager=AsyncRedisManager(f"redis://{args['redis_uri']}:{args['redis_port']}/{args['socketio_db_number']}"),
-                           async_mode='asgi',
-                           cors_allowed_origins='*')
+
 red_pubsub = red.pubsub()
+job_sid_queue = queue.Queue()
 
 
-@sio.event
-async def connect(sid, environ):
-    print("connect ", sid)
+def run(job_sid_queue):
+    sio = socketio.AsyncServer(client_manager=AsyncRedisManager(
+        f"redis://{args['redis_uri']}:{args['redis_port']}/{args['socketio_db_number']}"),
+        async_mode='asgi',
+        cors_allowed_origins='*')
 
+    @sio.event
+    async def connect(sid, environ):
+        print("connect ", sid)
 
-@sio.on("set_job")
-async def set_job(sid, job_id):
-    # add to user map if not already there
-    job_map[sid] = job_id
-    job_map_rlt[job_id] = sid
-    print("set_job ")
-    print(job_map_rlt)
-    print(job_id)
+    @sio.on("set_job")
+    async def set_job(sid, job_id):
+        # add to user map if not already there
+        job_sid_queue.put(("a", sid, job_id))
+        print("add to queue")
 
+    @sio.event
+    async def disconnect(sid):
+        print("disconnect ", sid)
+        # remove sid from user map, clear pending tasks
+        job_sid_queue.put(("d", sid, None))
+        print("delete to queue")
 
-@sio.event
-async def disconnect(sid):
-    print("disconnect ", sid)
-    # remove sid from user map, clear pending tasks
-    if sid in job_map.keys():
-        job_id = job_map[sid]
-        del job_map[sid]
-        del job_map_rlt[job_id]
-    else:
-        print("sid not in job_map:", sid)
+    app = socketio.ASGIApp(sio)
 
-
-app = socketio.ASGIApp(sio)
-
-
-def run():
     # socketio.AsyncServer class
     config = uvicorn.Config("blockscrape_result_server.__main__:app", host="0.0.0.0",
                             log_level="info")
@@ -67,7 +61,7 @@ def run():
 async def main():
     thread = None
     try:
-        thread = threading.Thread(target=run)
+        thread = threading.Thread(target=run, args=(job_sid_queue,))
         thread.start()
         print("Jegger ist ein Andy")
         await red_pubsub.psubscribe("*")
@@ -76,6 +70,21 @@ async def main():
             write_only=True))
         while True:
             print("Jegger ist ein noch größerer Andy")
+            for i in range(job_sid_queue.qsize()):
+                action, sid, job_id = job_sid_queue.get()
+                if action == "a":
+                    job_map[sid] = job_id
+                    job_map_rlt[job_id] = sid
+                    print("set_job ")
+                    print(job_map_rlt)
+                    print(job_id)
+                elif action == "d":
+                    if sid in job_map.keys():
+                        job_id = job_map[sid]
+                        del job_map[sid]
+                        del job_map_rlt[job_id]
+                    else:
+                        print("sid not in job_map:", sid)
             message = await red_pubsub.get_message(timeout=8.0)
             print("message")
             print(message)
