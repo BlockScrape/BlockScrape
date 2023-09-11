@@ -32,6 +32,8 @@ async def set_user(sid, job_id):
     job_map[sid] = job_id
     job_map_rlt[job_id] = sid
     await red_pubsub.subscribe(job_id)
+    print("set_user ")
+    print(job_id)
 
 
 @sio.event
@@ -63,7 +65,10 @@ async def main():
         thread.start()
         while True:
             message = await red_pubsub.get_message()
+            print("message")
+            print(message)
             if message:
+                print("emit task_result")
                 await sio.emit("task_result", message["data"], room=job_map_rlt[message["channel"]])
             else:
                 time.sleep(1)
