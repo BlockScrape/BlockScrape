@@ -1,6 +1,6 @@
 import argparse
 import asyncio
-from json import JSONEncoder
+from json import JSONEncoder, JSONDecoder
 
 import socketio
 
@@ -24,12 +24,15 @@ def connect():
 
 
 @sio.on("task_result")
-def compute_task_bundle(data: TaskResultSchema):
+def compute_task_bundle(data):
     # write result to file
     print("got result: ")
     print(data)
-    with open(f"{output_dir}/{str(data.time)}", "w") as f:
-        f.write(JSONEncoder().encode(data.model_dump_json()))
+    parsed_data = JSONDecoder().decode(data)
+    parsed_data = [TaskResultSchema.model_validate(task_res) for task_res in parsed_data]
+    for task_res in parsed_data:
+        with open(f"{output_dir}/{str(task_res.time)}", "w") as f:
+            f.write(task_res.model_dump_json())
 
 
 if __name__ == "__main__":
