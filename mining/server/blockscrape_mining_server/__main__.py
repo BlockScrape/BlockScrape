@@ -84,7 +84,7 @@ async def task_result(sid, data):
                                              )
     # write results to redis
     await sio.emit("task_bundle", await get_new_task_bundle(10), room=sid)
-    [await red.publish(result.job_id, result.model_dump_json()) for result in processed_results]
+    await asyncio.gather(*[red.publish(result.job_id, result.model_dump_json()) for result in processed_results])
     print("published results")
 
 

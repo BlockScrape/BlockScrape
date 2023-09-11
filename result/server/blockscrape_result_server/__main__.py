@@ -37,6 +37,7 @@ async def set_job(sid, job_id):
     job_map[sid] = job_id
     job_map_rlt[job_id] = sid
     print("set_job ")
+    print(job_map_rlt)
     print(job_id)
 
 
@@ -68,17 +69,25 @@ async def main():
     try:
         thread = threading.Thread(target=run)
         thread.start()
+        print("Jegger ist ein Andy")
         await red_pubsub.psubscribe("*")
         proxy_sio = socketio.AsyncServer(client_manager=AsyncRedisManager(
             f"redis://{args['redis_uri']}:{args['redis_port']}/{args['socketio_db_number']}",
             write_only=True))
         while True:
+            print("Jegger ist ein noch größerer Andy")
             message = await red_pubsub.get_message(timeout=8.0)
             print("message")
             print(message)
             if message:
                 print("emit task_result")
-                await proxy_sio.emit("task_result", message["data"], room=job_map_rlt[message["channel"]])
+                print(message["channel"])
+                print(job_map_rlt.keys())
+                if message["channel"] in job_map_rlt.keys():
+                    print("hallo test")
+                    await proxy_sio.emit("task_result", message["data"], room=job_map_rlt[message["channel"]])
+                    print("hallo test test test")
+                print("hallo 123")
             else:
                 time.sleep(1)
     except KeyboardInterrupt:
