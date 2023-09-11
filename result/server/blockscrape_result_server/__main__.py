@@ -12,15 +12,15 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--redis_uri', default="127.0.0.1")
 parser.add_argument('--redis_port', default=6379)
 parser.add_argument('--task_db_number', default=0)
-parser.add_argument('--socketio_db_numer', default=1)
+parser.add_argument('--socketio_db_number', default=1)
 args = vars(parser.parse_args())
 
-conn_pool = redis.ConnectionPool(host=args["redis_uri"], port=args["redis_port"], db=args["redis_db_number"])
+conn_pool = redis.ConnectionPool(host=args["redis_uri"], port=args["redis_port"], db=args["task_db_number"])
 red = redis.Redis(connection_pool=conn_pool)
 
 job_map = {}  # key: socket id, value: user id
 job_map_rlt = {}
-sio = socketio.AsyncServer(client_manager=AsyncRedisManager(f"redis://{args['redis_uri']}:{args['redis_port']}/{args['socketio_db_numer']}"),
+sio = socketio.AsyncServer(client_manager=AsyncRedisManager(f"redis://{args['redis_uri']}:{args['redis_port']}/{args['socketio_db_number']}"),
                            async_mode='asgi',
                            cors_allowed_origins='*')
 red_pubsub = red.pubsub()
@@ -36,7 +36,7 @@ async def set_job(sid, job_id):
     # add to user map if not already there
     job_map[sid] = job_id
     job_map_rlt[job_id] = sid
-    print("set_user ")
+    print("set_job ")
     print(job_id)
 
 
@@ -70,7 +70,7 @@ async def main():
         thread.start()
         await red_pubsub.psubscribe("*")
         proxy_sio = socketio.AsyncServer(client_manager=AsyncRedisManager(
-            f"redis://{args['redis_uri']}:{args['redis_port']}/{args['socketio_db_numer']}",
+            f"redis://{args['redis_uri']}:{args['redis_port']}/{args['socketio_db_number']}",
             write_only=True))
         while True:
             message = await red_pubsub.get_message(timeout=8.0)

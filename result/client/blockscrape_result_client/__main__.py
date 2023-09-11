@@ -11,7 +11,7 @@ parser.add_argument("--result_server_url", type=str, default="localhost")
 parser.add_argument("--output_dir", type=str, required=True)
 parser.add_argument("--job_id", type=str, required=True)
 parsed_args = parser.parse_args()
-mining_server_url: str = parsed_args.mining_server_url
+mining_server_url: str = parsed_args.result_server_url
 output_dir: str = parsed_args.output_dir
 
 sio = socketio.Client(logger=True, engineio_logger=True)

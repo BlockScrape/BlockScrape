@@ -112,6 +112,12 @@ services:
     networks:
       - mining_backend
       - mining
+      - scheduling
+    command:
+      - "--redis_uri=scheduling_store"
+      - "--redis_port=6379"
+      - "--task_db_number=0"
+      - "--socketio_db_number=1"
 
   scheduling_service:
     build: ./scheduling

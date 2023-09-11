@@ -26,6 +26,7 @@ class TaskSchema(BaseModel):
 
 
 class TaskResultSchema(BaseModel):
+    task_result_id: str
     task_id: str
     job_id: str
     headers: str

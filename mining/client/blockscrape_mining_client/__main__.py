@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import time
+import uuid
 from json import JSONDecoder, JSONEncoder
 from typing import List, Coroutine
 import httpx
@@ -40,6 +41,7 @@ def scrape(task: TaskSchema):
                                                          content=task.content,
                                                          )
         return TaskResultSchema(task_id=task.id,
+                                task_result_id=str(uuid.uuid4()),
                                 job_id=task.job_id,
                                 headers=str(res.headers),
                                 time=int(time.time()),
