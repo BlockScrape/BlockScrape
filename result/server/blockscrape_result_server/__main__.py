@@ -51,11 +51,7 @@ def run(job_sid_queue):
 
     app = socketio.ASGIApp(sio)
 
-    # socketio.AsyncServer class
-    config = uvicorn.Config("blockscrape_result_server.__main__:app", host="0.0.0.0",
-                            log_level="info")
-    server = uvicorn.Server(config=config)
-    server.run()
+    uvicorn.run(app=app, host="0.0.0.0", log_level="info")
 
 
 async def main():
