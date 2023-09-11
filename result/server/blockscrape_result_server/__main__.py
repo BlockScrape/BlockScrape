@@ -26,8 +26,8 @@ async def connect(sid, environ):
     print("connect ", sid)
 
 
-@sio.on("set_user")
-async def set_user(sid, job_id):
+@sio.on("set_job")
+async def set_job(sid, job_id):
     # add to user map if not already there
     job_map[sid] = job_id
     job_map_rlt[job_id] = sid
