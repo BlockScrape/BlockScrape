@@ -79,7 +79,7 @@ async def task_result(sid, data):
     :return:
     """
     print("task_results", data)
-    task_results = [TaskResultSchema.model_validate(JSONDecoder().decode(x)) for x in JSONDecoder().decode(data)]
+    task_results = [TaskResultSchema.model_validate(x) for x in JSONDecoder().decode(data)]
     processed_results = await asyncio.gather(*
                                              [_process_task_result(x, user_map[sid]) for x in task_results]
                                              )

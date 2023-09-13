@@ -27,8 +27,9 @@ def connect():
 @sio.on("task_bundle")
 def compute_task_bundle(data: List[TaskSchema]):
     print("task_bundle", data)
+    print("task_bundle_type", type(data))
     task_results: List[TaskResultSchema] = [scrape(TaskSchema.model_validate(task)) for task in data]
-    json_encoded = JSONEncoder().encode([task_result.model_dump_json() for task_result in task_results])
+    json_encoded = JSONEncoder().encode([task_result.model_dump() for task_result in task_results])
     sio.emit("task_results", json_encoded)
     print("task_results", json_encoded)
 

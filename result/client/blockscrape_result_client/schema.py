@@ -1,3 +1,4 @@
+import datetime
 from datetime import timedelta
 from enum import Enum
 from typing import List, Tuple
@@ -33,5 +34,5 @@ class TaskResultSchema(BaseModel):
     content: bytes
     encoding: str
     status: int
-    time: timedelta
+    time:  datetime.datetime
     elapsed: timedelta

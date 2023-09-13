@@ -26,11 +26,8 @@ def connect():
 @sio.on("task_result")
 def compute_task_bundle(data):
     # write result to file
+    parsed_data = TaskResultSchema.model_validate(JSONDecoder().decode(data.decode('utf-8')))
     print("got result: ")
-    print(data)
-    parsed_data = JSONDecoder().decode(data.decode('utf-8'))
-    print(parsed_data)
-    parsed_data = TaskResultSchema.model_validate(parsed_data)
     print(parsed_data)
     with open(f"{output_dir}/{str(parsed_data.time)}", "w") as f:
         f.write(parsed_data.model_dump_json())
