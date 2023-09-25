@@ -1,6 +1,6 @@
 import time
 from uuid import uuid4, UUID
-
+import random
 from cassandra.cluster import Session
 from fastapi import status
 from fastapi.responses import JSONResponse
@@ -8,19 +8,24 @@ from fastapi.responses import JSONResponse
 
 def create_order(username: str, name: str, scraping_url, start_timestamp: int, repetitions: int, intervall: int,
                  request_method: str, request_header: str, request_body: str, session: Session):
-    # try:
-    session.execute(
-        "INSERT INTO order_list (uuid, creator_username, name, scraping_url, request_method, request_header, request_body, start_timestamp, next_scrape, last_updated, intervall, repetitions, finished)"
-        "VALUES (%(id)s, %(creator_user)s, %(scrape_name)s, %(scrape_url)s, %(r_method)s,%(r_header)s, %(r_body)s, %(timestamp)s, %(timestamp)s, %(current_time)s, %(interv)s, %(repetit)s, %(finishe)s)",
-        {'id': uuid4(), 'creator_user': username, 'scrape_name': name, 'scrape_url': scraping_url,
-         'timestamp': int(start_timestamp / 1000), 'repetit': repetitions, 'interv': intervall,
-         'current_time': int(time.time()), 'r_header': request_header, 'r_body': request_body,
-         'r_method': request_method, 'finishe': False})
+    create_statement = "INSERT INTO order_list (uuid, creator_username, name, scraping_url, request_method, request_header, request_body, start_timestamp, next_scrape, last_updated, intervall, repetitions, finished, scheduler_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    create_data = session.prepare(create_statement).bind({'uuid': uuid4(),
+                                                          'creator_username': username,
+                                                          'name': name,
+                                                          'scraping_url': scraping_url,
+                                                          'request_method': request_method,
+                                                          'request_header': request_header,
+                                                          'request_body': request_body,
+                                                          'start_timestamp': int(start_timestamp / 1000),
+                                                          'next_scrape': int(start_timestamp / 1000),
+                                                          'last_updated': int(time.time()),
+                                                          'intervall': intervall,
+                                                          'repetitions': repetitions,
+                                                          'finished': False,
+                                                          'scheduler_number': random.randint(1, 10)
+                                                          })
+    session.execute(create_data)
     return JSONResponse(status_code=status.HTTP_201_CREATED, content="Order created")
-
-
-# except:
-#    return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content="Error in Database")
 
 
 def get_orders(username: str, session: Session):

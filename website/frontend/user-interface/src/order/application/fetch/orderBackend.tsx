@@ -53,7 +53,7 @@ export function saveOrder(data: {website_name: string, url: string, request_meth
     const dataToSend = {
         name: data.website_name,
         url: data.url,
-        starting_time: doUtcDate(data.starting_date).getTime(),
+        starting_time: data.starting_date.getTime(),
         intervall_time: data.intervall_time,
         repetitions: data.repetitions,
         request_method: data.request_method,

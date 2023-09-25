@@ -3,9 +3,6 @@ services:
 
   cassandra:
     image: cassandra:latest
-    container_name: cassandra
-    ports:
-      - "9042:9042"
     restart: always
     healthcheck:
       test: [ "CMD", "cqlsh", "-u cassandra", "-p cassandra" ,"-e describe keyspaces" ]
@@ -19,7 +16,6 @@ services:
       - scheduling
 
   cassandra-load-keyspace:
-    container_name: load-keyspace
     image: cassandra:latest
     depends_on:
       cassandra:
@@ -37,21 +33,18 @@ services:
       - cassandra
 
   react_ui:
-    container_name: react-ui
     build: ./website/frontend/user-interface
     restart: always
-    ports:
-      - "99:99"
     depends_on:
       user_backend:
         condition: service_started
     networks:
       - website
+    deploy:
+        replicas: 1
 
   user_backend:
     build: ./website/backend
-    ports:
-      - "6543:6543"
     restart: always
     depends_on:
       cassandra:
@@ -73,12 +66,12 @@ services:
       - website
       - coin
       - user_backend
+    deploy:
+        replicas: 1
 
   auth_service:
     build: ./authentitication/server
     restart: always
-    ports:
-      - "7979:7979"
     depends_on:
       cassandra:
         condition: service_healthy
@@ -90,37 +83,48 @@ services:
       - "--cassandra_user=cassandra"
       - "--cassandra_passwd=cassandra"
     networks:
-      - mining_backend
       - user_backend
+    deploy:
+        replicas: 1
 
   mining_server:
     build: ./mining/server
-    ports:
-      - "8001:8000"
     networks:
       - mining_backend
       - mining
       - scheduling
+      - rabbitmq_network
     command:
       - "--redis_uri=scheduling_store"
       - "--redis_port=6379"
+      - "--rabbitMQ_uri=rabbitmq"
+      - "--rabbitMQ_user=user"
+      - "--rabbitMQ_passwd=user"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
   result_server:
     build: ./result/server
-    ports:
-      - "8000:8000"
     networks:
       - mining_backend
       - mining
       - scheduling
+      - rabbitmq_network
     command:
       - "--redis_uri=scheduling_store"
       - "--redis_port=6379"
       - "--task_db_number=0"
       - "--socketio_db_number=1"
+      - "--rabbitMQ_uri=rabbitmq"
+      - "--rabbitMQ_user=user"
+      - "--rabbitMQ_passwd=user"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
   scheduling_service:
-    build: ./scheduling
+    build: ./scheduling/server
     restart: always
     command:
       - "--cassandra_uri=cassandra"
@@ -129,6 +133,8 @@ services:
       - "--cassandra_passwd=cassandra"
       - "--redis_uri=scheduling_store"
       - "--redis_port=6379"
+      - "--manager_uri=http://manager"
+      - "--manager_port=666"
     networks:
       - scheduling
     depends_on:
@@ -138,14 +144,19 @@ services:
         condition: service_completed_successfully
       scheduling_store:
         condition: service_started
+    deploy:
+      replicas: 1
 
   scheduling_store:
     image: redis:7.0-alpine
     restart: always
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-    ports:
-      - '6379:6379'
+    networks:
+      - scheduling
+
+  manager:
+    build: ./scheduling/manager
     networks:
       - scheduling
 
@@ -164,17 +175,39 @@ services:
     networks:
       - coin
 
+  nginx:
+    image: nginx:latest
+    ports:
+      - "99:99"
+    volumes:
+      - ./loadbalancer/nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - react_ui
+      - mining_server
+      - result_server
+    networks:
+      - website
+      - mining
+
+  rabbitmq:
+    image: "rabbitmq"
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: user
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - rabbitmq_network
+
 networks:
   website:
-    external: true
   scheduling:
   mining:
-    external: true
   coin:
-    internal: true
   user_backend:
-    internal: true
   mining_backend:
-    internal: true
   cassandra:
-    internal: true
+  rabbitmq_network:
