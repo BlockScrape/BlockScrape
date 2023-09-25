@@ -38,6 +38,6 @@ def compute_task_bundle(data):
 
 if __name__ == "__main__":
     try:
-        sio.connect(mining_server_url)
+        sio.connect(mining_server_url, socketio_path=server_path)
     except KeyboardInterrupt:
         print("exiting")

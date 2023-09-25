@@ -10,9 +10,9 @@ import socketio
 from schema import TaskResultSchema, TaskSchema
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--mining_server_url", type=str, default="http://localhost:8001")
-parser.add_argument("--server_path", type=str, default="")
-parser.add_argument("--user", type=str, required=True, default="")
+parser.add_argument("--mining_server_url", type=str, default="http://localhost:99")
+parser.add_argument("--server_path", type=str, default="/miningServer")
+parser.add_argument("--user", type=str, default="snerksss")
 parsed_args = parser.parse_args()
 mining_server_url: str = parsed_args.mining_server_url
 server_path: str = parsed_args.server_path
@@ -62,4 +62,4 @@ def scrape(task: TaskSchema):
                                 elapsed=int(res.elapsed.seconds))
 
 
-sio.connect(mining_server_url)
+sio.connect(mining_server_url, socketio_path=server_path)
