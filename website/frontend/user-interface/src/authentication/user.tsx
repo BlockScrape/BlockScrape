@@ -151,7 +151,7 @@ export function register(value: {
                     id: "register-error",
                     withCloseButton: true,
                     title: "Error",
-                    message: "Cannot Validate User Token",
+                    message: "Not Successful",
                     icon: <IconX/>,
                     color: "red"
                 });
