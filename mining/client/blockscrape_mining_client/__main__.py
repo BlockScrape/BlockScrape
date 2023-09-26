@@ -61,5 +61,8 @@ def scrape(task: TaskSchema):
                                 status=res.status_code,
                                 elapsed=int(res.elapsed.seconds))
 
+print(mining_server_url)
+print(server_path)
+print(user_id)
 
 sio.connect(mining_server_url, socketio_path=server_path)

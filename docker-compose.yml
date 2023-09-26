@@ -94,6 +94,7 @@ services:
       - mining
       - scheduling
       - rabbitmq_network
+      - coin
     command:
       - "--redis_uri=scheduling_store"
       - "--redis_port=6379"
