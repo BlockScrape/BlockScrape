@@ -11,6 +11,7 @@ python = "^3.10"
 httpx = "^0.24.1"
 pydantic = "^2.1.1"
 python-socketio = {extras = ["client"], version = "^5.9.0"}
+requests = "^2.31.0"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -1,6 +1,6 @@
 import Cookies from "universal-cookie";
 
-const REQUEST_URL = "http://" + window.location.hostname + ":6543",
+const REQUEST_URL = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port+ "/api",
     USER_URL = '/user',
     LOGIN_TOKEN = '/check_credentials',
     LOGIN_TOKEN_MFA = "/token",
@@ -61,6 +61,9 @@ function logout() {
 }
 
 function doUtcDate(date: Date) {
+    console.log(date.getDate())
+    console.log(date.getMonth())
+    console.log(date.getFullYear())
     let year = "" + date.getFullYear()
     let day = ""
     let month = ""
@@ -73,9 +76,9 @@ function doUtcDate(date: Date) {
         day = "" + date.getDate()
     }
     if (date.getMonth() < 10) {
-        month = "0" + date.getMonth()
+        month = "0" + (date.getMonth() +1)
     } else {
-        month = "" + date.getMonth()
+        month = "" + (date.getMonth() +1)
     }
     if (date.getHours() < 10) {
         hour = "0" + date.getHours()

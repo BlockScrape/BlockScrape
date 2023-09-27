@@ -53,7 +53,7 @@ export function saveOrder(data: {website_name: string, url: string, request_meth
     const dataToSend = {
         name: data.website_name,
         url: data.url,
-        starting_time: doUtcDate(data.starting_date).getTime(),
+        starting_time: data.starting_date.getTime(),
         intervall_time: data.intervall_time,
         repetitions: data.repetitions,
         request_method: data.request_method,
@@ -67,8 +67,27 @@ export function saveOrder(data: {website_name: string, url: string, request_meth
         body: JSON.stringify(dataToSend)
     })
         .then(response => {
+            if (response.status === 409) {
+                notifications.show({
+                id: "Coin conflict",
+                withCloseButton: true,
+                title: "Conflict",
+                message: "You haven't enough coins to create this order",
+                icon: <IconX/>,
+                color: "red"
+                });
+                return;
+            }
+
             if (response.status !== HTTP_STATUS_CREATED) {
-                alert("Nope");
+                notifications.show({
+                id: "backend_error",
+                withCloseButton: true,
+                title: "Error",
+                message: "Backend Error",
+                icon: <IconX/>,
+                color: "red"
+                });
                 return;
             }
             return response.json()
@@ -81,13 +100,14 @@ export function saveOrder(data: {website_name: string, url: string, request_meth
         .catch(rejected => {
             console.log(rejected)
             notifications.show({
-                id: "register-error",
+                id: "backend_not_reachable",
                 withCloseButton: true,
                 title: "Error",
                 message: "Backend not Reachable",
                 icon: <IconX/>,
                 color: "red"
             });
+            return;
         });
 }
 
@@ -102,7 +122,14 @@ export function deleteOrder(dataUuid: string) {
     })
         .then(response => {
             if (response.status !== HTTP_STATUS_OK) {
-                alert("Nope")
+                notifications.show({
+                id: "backend_error",
+                withCloseButton: true,
+                title: "Error",
+                message: "Backend Error",
+                icon: <IconX/>,
+                color: "red"
+                });
                 return;
             }
             return response.json();

@@ -3,7 +3,7 @@ auth_server_con_string: str
 coin_server_con_string: str
 
 
-def set_server_con_string(auth_uri: str, coin_uri):
+def set_server_con_string(auth_uri: str, coin_uri: str):
     global auth_server_con_string
     global coin_server_con_string
     auth_server_con_string = auth_uri

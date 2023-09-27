@@ -95,12 +95,16 @@ export function OrderModal() {
                         required
                     />
                     <br/>
+                    <Center>
+                        <p>Be sure you have enough coins. Every repetition need one coin</p>
+                    </Center>
                     <Checkbox
                         label="I agree to sell my soul"
                         {...form.getInputProps('termsOfService')}
                         required
                     />
                     <br/>
+
                     <Center>
                         <Button type="submit" color="teal">
                             Save Order

@@ -31,8 +31,8 @@ class TaskResultSchema(BaseModel):
     task_id: str
     job_id: str
     headers: str
-    content: bytes
+    content: str
     encoding: str
     status: int
-    time: datetime.datetime
-    elapsed: timedelta
+    time: int
+    elapsed: int

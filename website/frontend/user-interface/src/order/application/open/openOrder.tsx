@@ -15,6 +15,7 @@ export function OpenOrder(value: { uuid: string, name: string, url: string, star
     return (
         <>
             <Modal opened={opened} onClose={close} title={value.name}>
+                <p style={{wordWrap: "break-word"}}>{value.uuid}</p>
                 <p style={{wordWrap: "break-word"}}>{value.url}</p>
                 <Flex gap="xs">
                     <p>Method: </p>
