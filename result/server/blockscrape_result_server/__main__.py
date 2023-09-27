@@ -33,7 +33,8 @@ red_pubsub = red.pubsub()
 job_sid_queue = queue.Queue()
 
 credentials = pika.PlainCredentials(args["rabbitMQ_user"], args["rabbitMQ_passwd"])
-connection = pika.BlockingConnection(pika.ConnectionParameters(args["rabbitMQ_uri"], credentials=credentials))
+connection = pika.BlockingConnection(
+    pika.ConnectionParameters(args["rabbitMQ_uri"], credentials=credentials, heartbeat=0))
 channel = connection.channel()
 exchange_name = 'results'
 connection.channel().exchange_declare(exchange=exchange_name, exchange_type='fanout')

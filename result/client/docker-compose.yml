@@ -1,0 +1,9 @@
+version: '3.3'
+services:
+  result-client:
+    build: .
+    command:
+      - "--result_server_url=http://host.docker.internal:99" # Specify the result server url
+      - "--server_path=/resultServer/socket.io" # Requests go through the traefik, so the path is /resultServer/socket.io
+      - "--job_id=YOURJOBID" # You get this UUID from the Order Website
+      - "--output_dir=."

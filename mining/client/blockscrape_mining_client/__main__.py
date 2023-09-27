@@ -5,13 +5,14 @@ import uuid
 from json import JSONDecoder, JSONEncoder
 from typing import List, Coroutine
 import httpx
+import requests
 import socketio
 
 from schema import TaskResultSchema, TaskSchema
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--mining_server_url", type=str, default="http://localhost:99")
-parser.add_argument("--server_path", type=str, default="/miningServer")
+parser.add_argument("--server_path", type=str, default="/miningServer/socket.io/")
 parser.add_argument("--user", type=str, default="snerksss")
 parsed_args = parser.parse_args()
 mining_server_url: str = parsed_args.mining_server_url
@@ -24,6 +25,7 @@ sio = socketio.Client()
 @sio.event
 def connect():
     sio.emit("set_user", user_id)
+    print("I'm connected!")
     print("set user_id to: ", user_id)
 
 
@@ -64,5 +66,4 @@ def scrape(task: TaskSchema):
 print(mining_server_url)
 print(server_path)
 print(user_id)
-
 sio.connect(mining_server_url, socketio_path=server_path)

@@ -1,0 +1,8 @@
+version: '3.3'
+services:
+  mining-client:
+    build: .
+    command:
+      - "--mining_server_url=http://host.docker.internal:99" # Specify the mining server url
+      - "--server_path=/miningServer/socket.io" # Requests go through the traefik, so the path is /miningServer/socket.io
+      - "--user=YOUR_USERNAME" # You need to insert your username here

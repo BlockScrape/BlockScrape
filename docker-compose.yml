@@ -9,7 +9,7 @@ services:
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--providers.docker.network=traefik"
+      - "--providers.docker.network=blockscrape_traefik"
       - "--entrypoints.main.address=:99"
       - "--providers.docker.allowEmptyServices=true"
     volumes:
@@ -133,11 +133,12 @@ services:
       - "--rabbitMQ_uri=rabbitmq"
       - "--rabbitMQ_user=user"
       - "--rabbitMQ_passwd=user"
+      - "--coin_server_uri=http://coin-service:1337"
     depends_on:
       rabbitmq:
         condition: service_healthy
     deploy:
-      replicas: 1
+      replicas: 5
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.mining-server.entrypoints=main"
@@ -148,6 +149,7 @@ services:
       - "traefik.http.middlewares.mining-server-stripprefix.stripprefix.prefixes=/miningServer"
       - "traefik.http.middlewares.mining-server-stripprefix.stripprefix.forceSlash=true"
       - "traefik.http.routers.mining-server.middlewares=mining-server-stripprefix"
+      - "traefik.docker.network=blockscrape_traefik"
       # - "traefik.backend.loadbalancer.stickiness=true"
 
   result-server:
@@ -170,7 +172,7 @@ services:
       rabbitmq:
         condition: service_healthy
     deploy:
-      replicas: 1
+      replicas: 3
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.result-server.entrypoints=main"
@@ -181,6 +183,7 @@ services:
       - "traefik.http.middlewares.result-server-stripprefix.stripprefix.prefixes=/resultServer"
       - "traefik.http.middlewares.result-server-stripprefix.stripprefix.forceSlash=true"
       - "traefik.http.routers.result-server.middlewares=result-server-stripprefix"
+      - "traefik.docker.network=blockscrape_traefik"
 
   scheduling-service:
     build: ./scheduling/server
@@ -192,7 +195,7 @@ services:
       - "--cassandra_passwd=cassandra"
       - "--redis_uri=scheduling-store"
       - "--redis_port=6379"
-      - "--manager_uri=http://manager"
+      - "--manager_uri=http://schedule-manager"
       - "--manager_port=666"
     networks:
       - scheduling
@@ -214,7 +217,7 @@ services:
     networks:
       - scheduling
 
-  manager:
+  schedule-manager:
     build: ./scheduling/manager
     networks:
       - scheduling

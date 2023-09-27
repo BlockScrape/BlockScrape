@@ -20,7 +20,7 @@ parser.add_argument('--redis_port', default=6379)
 parser.add_argument('--rabbitMQ_uri', default="localhost")
 parser.add_argument('--rabbitMQ_user', default="user")
 parser.add_argument('--rabbitMQ_passwd', default="user")
-parser.add_argument('--coin_server_uri', default="http://coin_service:1337")
+parser.add_argument('--coin_server_uri', default="http://coin-service:1337")
 parser.add_argument('--update_coin_location', default="/update_coin")
 args = vars(parser.parse_args())
 
@@ -31,7 +31,8 @@ user_map = {}  # key: socket id, value: user id
 
 # Verbindung zur RabbitMQ-Broker herstellen
 credentials = pika.PlainCredentials(args["rabbitMQ_user"], args["rabbitMQ_passwd"])
-connection = pika.BlockingConnection(pika.ConnectionParameters(args["rabbitMQ_uri"], credentials=credentials))
+connection = pika.BlockingConnection(
+    pika.ConnectionParameters(args["rabbitMQ_uri"], credentials=credentials, heartbeat=0))
 exchange_name = 'results'
 connection.channel().exchange_declare(exchange=exchange_name, exchange_type='fanout')
 
